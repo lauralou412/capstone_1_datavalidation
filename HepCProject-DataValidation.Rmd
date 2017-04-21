@@ -1,0 +1,1481 @@
+---
+title: "ProjectDataReview"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+## R Markdown
+
+```{r}
+#
+#setwd("Z:/RawData/TextFormat")
+setwd("Z:/Hepatitis C Project/RawData/TextFormat")
+library(readr)
+#install.packages("readr")
+```
+
+```{r}
+
+##########Encounters File########
+#encounters <- read_delim("Z:/RawData/TextFormat/Encounters.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+encounters <- read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Encounters.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path - 647705 observations
+encounters <- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Enc.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy & Laura's path for new data files
+
+str(encounters)
+tail(encounters)
+dim(encounters)
+
+#Patient_ID
+sum(is.na(encounters$Patient_ID))
+
+#Encounter_ID
+sum(is.na(encounters$Encounter_ID))
+
+#Pat_Enc_Csn_ID_DID
+sum(is.na(encounters$Pat_Enc_Csn_ID_DID))
+
+#Zip_Code_DID
+sum(is.na(encounters$Zip_Code_DID))
+encounters$Zip_Code_DID<-as.character(encounters$Zip_Code_DID)
+
+#ENC_AGE
+sum(is.na(encounters$ENC_AGE))
+
+#Enc_EIO
+sum(is.na(encounters$Enc_EIO))
+
+#Enc_Type_c
+sum(is.na(encounters$Enc_Type_c))
+encounters$Enc_Type_c<-as.factor(encounters$Enc_Type_c)
+
+#Encounter_Type
+sum(is.na(encounters$Encounter_Type))
+encounters$Encounter_Type<-as.factor(encounters$Encounter_Type)
+
+#Fin_Class_C
+sum(is.na(encounters$Fin_Class_C))
+encounters$Fin_Class_C<-as.factor(encounters$Fin_Class_C)
+
+#Fin_Class
+sum(is.na(encounters$Fin_Class))
+encounters$Fin_Class<-as.factor(encounters$Fin_Class)
+
+#PCP_Prov_ID
+sum(is.na(encounters$PCP_Prov_ID))
+
+#PCP_Resource
+sum(is.na(encounters$PCP_Resource))
+encounters$PCP_Resource<-as.factor(encounters$PCP_Resource)
+
+#PCP_Prov_Service_C
+sum(is.na(encounters$PCP_Prov_Service_C))
+encounters$PCP_Prov_Service_C<-as.factor(encounters$PCP_Prov_Service_C)
+
+#PCP_Prov_Service
+sum(is.na(encounters$PCP_Prov_Service))
+encounters$PCP_Prov_Service<-as.factor(encounters$PCP_Prov_Service)
+
+#Enc_DT_DS
+sum(is.na(encounters$Enc_DT_DS))
+
+#Appt_DTTM_DS
+sum(is.na(encounters$Appt_DTTM_DS))
+
+#Appt_Checkin_DTTM
+sum(is.na(encounters$Appt_Checkin_DTTM))
+
+#Appt_Status_C
+sum(is.na(encounters$Appt_Status_C))
+encounters$Appt_Status_C<-as.factor(encounters$Appt_Status_C)
+
+#Appt_Status
+sum(is.na(encounters$Appt_Status))
+encounters$Appt_Status<-as.factor(encounters$Appt_Status)
+
+#Appt_Cancel_DTTM_DS
+sum(is.na(encounters$Appt_Cancel_DTTM_DS))
+
+#Appt_Primary_Loc_ID
+sum(is.na(encounters$Appt_Primary_Loc_ID))
+encounters$Appt_Primary_Loc_ID<-as.factor(encounters$Appt_Primary_Loc_ID)
+
+#Appt_Primary_Location
+sum(is.na(encounters$Appt_Primary_Location))
+encounters$Appt_Primary_Location<-as.factor(encounters$Appt_Primary_Location)
+
+#Appt_Dept_ID
+sum(is.na(encounters$Appt_Dept_ID))
+encounters$Appt_Dept_ID<-as.factor(encounters$Appt_Dept_ID)
+
+#Appt_Dept
+sum(is.na(encounters$Appt_Dept))
+encounters$Appt_Dept<-as.factor(encounters$Appt_Dept)
+
+#Appt_Prov_ID
+sum(is.na(encounters$Appt_Prov_ID))
+
+#Appt_Resource
+sum(is.na(encounters$Appt_Resource))
+encounters$Appt_Resource<-as.factor(encounters$Appt_Resource)
+
+#Appt_Prov_Service_C
+sum(is.na(encounters$Appt_Prov_Service_C))
+encounters$Appt_Prov_Service_C<-as.factor(encounters$Appt_Prov_Service_C)
+
+#Appt_Prov_Service
+sum(is.na(encounters$Appt_Prov_Service))
+encounters$Appt_Prov_Service<-as.factor(encounters$Appt_Prov_Service)
+
+#ED_Arrival_DTTM_DS
+sum(is.na(encounters$ED_Arrival_DTTM_DS))
+
+#ED_Disposition_C
+sum(is.na(encounters$ED_Disposition_C))
+
+#ED_Disposition
+sum(is.na(encounters$ED_Disposition))
+
+#Hsp_Adm_DTTM_DS
+sum(is.na(encounters$Hsp_Adm_DTTM_DS))
+
+#Hsp_Disch_DTTM_DS
+sum(is.na(encounters$Hsp_Disch_DTTM_DS))
+
+#LOS_Days
+sum(is.na(encounters$LOS_Days))
+
+#LOS_Hrs
+sum(is.na(encounters$LOS_Hrs))
+
+#Means_of_Arrival_C
+sum(is.na(encounters$Means_of_Arrival_C))
+
+#Means_of_Arrival
+sum(is.na(encounters$Means_of_Arrival))
+
+#Admit_Source_C
+sum(is.na(encounters$Admit_Source_C))
+encounters$Admit_Source_C<-as.factor(encounters$Admit_Source_C)
+
+#Admit_Source
+sum(is.na(encounters$Admit_Source))
+encounters$Admit_Source<-as.factor(encounters$Admit_Source)
+
+#First_Enc_Dept
+sum(is.na(encounters$First_Enc_Dept))
+encounters$First_Enc_Dept<-as.factor(encounters$First_Enc_Dept)
+
+#First_Enc_Service
+sum(is.na(encounters$First_Enc_Service))
+encounters$First_Enc_Service<-as.factor(encounters$First_Enc_Service)
+
+#First_Prov_ID
+sum(is.na(encounters$First_Prov_ID))
+
+#First_Resource
+sum(is.na(encounters$First_Resource))
+encounters$First_Resource<-as.factor(encounters$First_Resource)
+
+#First_Prov_Specialty_C
+sum(is.na(encounters$First_Prov_Specialty_C))
+encounters$First_Prov_Specialty_C<-as.factor(encounters$First_Prov_Specialty_C)
+
+#First_Prov_Specialty
+sum(is.na(encounters$First_Prov_Specialty))
+encounters$First_Prov_Specialty<-as.factor(encounters$First_Prov_Specialty)
+
+#Center_C
+sum(is.na(encounters$Center_C))
+encounters$Center_C<-as.factor(encounters$Center_C)
+
+#Center
+sum(is.na(encounters$Center))
+encounters$Center<-as.factor(encounters$Center)
+
+#Room
+sum(is.na(encounters$Room))
+
+#Last_Enc_Dept
+sum(is.na(encounters$Last_Enc_Dept))
+encounters$Last_Enc_Dept<-as.factor(encounters$Last_Enc_Dept)
+
+#Last_Enc_Service
+sum(is.na(encounters$Last_Enc_Service))
+encounters$Last_Enc_Service<-as.factor(encounters$Last_Enc_Service)
+
+#Last_Prov_ID
+sum(is.na(encounters$Last_Prov_ID))
+
+#Last_Resource
+sum(is.na(encounters$Last_Resource))
+encounters$Last_Resource<-as.factor(encounters$Last_Resource)
+
+#Last_Prov_Specialty_C
+sum(is.na(encounters$Last_Prov_Specialty_C))
+encounters$Last_Prov_Specialty_C<-as.factor(encounters$Last_Prov_Specialty_C)
+
+#Last_Prov_Specialty
+sum(is.na(encounters$Last_Prov_Specialty))
+encounters$Last_Prov_Specialty<-as.factor(encounters$Last_Prov_Specialty)
+
+#Disch_Dispo_C
+sum(is.na(encounters$Disch_Dispo_C))
+encounters$Disch_Dispo_C<-as.factor(encounters$Disch_Dispo_C)
+
+#Disch_Dispo
+sum(is.na(encounters$Disch_Dispo))
+encounters$Disch_Dispo<-as.factor(encounters$Disch_Dispo)
+
+#Pt_Encs
+sum(is.na(encounters$Pt_Encs))
+
+#Service_Area_C
+sum(is.na(encounters$Service_Area_C))
+
+#Service_Area
+sum(is.na(encounters$Service_Area))
+
+####HH do type conversions for certain fields that need cleanup
+
+encounters$Zip_Code_DID<-as.factor(encounters$Zip_Code_DID) #is this conversion needed?
+encounters$PCP_Prov_ID<-as.character(encounters$PCP_Prov_ID,width=5) #is this conversion needed?
+
+#review cleaned data
+
+str(encounters)
+head(encounters)
+
+#export random sample of table - 1%
+##encounter_sample_rows <- encounters[sample(nrow(encounters), nrow(encounters)*.01),]
+##write.csv(encounter_sample_rows, "Z:/Hepatitis C Project/Samples of tables/encounter_sample.csv" )
+```
+
+
+```{r}
+#############DIAGNOSIS ICD Table#############
+diagnosis_icd<-read_delim("Z:/RawData/TextFormat/Diagnosis_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+diagnosis_icd<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Diagnosis_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path
+
+str(diagnosis_icd)#8,536,894 obs. of  7 variables
+head(diagnosis_icd)
+dim(diagnosis_icd)
+
+
+
+```
+
+```{r cars}
+########CPT File##########
+cpt<-read_delim("Z:/RawData/TextFormat/CPT.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+cpt <- read_delim("Z:/Hepatitis C Project/RawData/TextFormat/CPT.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+
+str(cpt)
+head(cpt)
+dim(cpt)
+
+#Patient ID
+length(unique(cpt$patient_id))
+sum(is.na(cpt$patient_id))
+
+#collection of venous blood by venipuncture
+subset(cpt, CPT == "36415") #32340
+
+#Hep C antibody screening, for individual at high risk and other covered indication
+subset(cpt, CPT == "G0472") #0
+
+#Hepatitis C Anitbody
+subset(cpt, CPT == "86803") #318
+
+#Hepatitis C, confirmatory test (with reflex)
+subset(cpt, CPT == "86804") #2
+
+#Hepatitis C, direct probe technique
+subset(cpt, CPT == "87520") #0
+
+#Hepatitis C, amplified probe
+subset(cpt, CPT == "87521") #0
+
+#Hepatitis C, quantification
+subset(cpt, CPT == "87522") #256
+
+#Hepatitis C virus(HCV) genotype test
+subset(cpt, CPT == "87902") #20
+
+#Hepatitis C, genotype test
+subset(cpt, CPT == "3266F") #88
+
+#Anti-Nuclear Antibodies(ANA)
+subset(cpt, CPT == "86038") #0
+
+
+```
+
+
+```{r}
+##########Med_Rec_Adm File########
+med_rec_adm<-read_delim("Z:/RawData/TextFormat/Med_Rec_Adm.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+med_rec_adm<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Med_Rec_Adm.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+
+str(med_rec_adm)
+dim(med_rec_adm)
+head(med_rec_adm)
+names(med_rec_adm)
+
+#Patient ID
+length(unique(med_rec_adm$PATIENT_ID))
+sum(is.na(med_rec_adm$PATIENT_ID))
+
+#Encounter ID
+length(unique(med_rec_adm$ENCOUNTER_ID))
+sum(is.na(med_rec_adm$ENCOUNTER_ID)) 
+
+#Serial # for ethe patient contact
+length(unique(med_rec_adm$PAT_ENC_CSN_ID_DID))
+sum(is.na(med_rec_adm$PAT_ENC_CSN_ID_DID)) 
+
+#Billing type of encouter
+table(med_rec_adm$Enc_EIO)
+sum(is.na(med_rec_adm$Enc_EIO))
+med_rec_adm$Enc_EIO <- as.factor(med_rec_adm$Enc_EIO)
+
+#Encounter category type - integar
+table(med_rec_adm$ENC_TYPE_C) 
+sum(is.na(med_rec_adm$ENC_TYPE_C))
+
+#Encounter Type - descriptive
+med_rec_adm$ENCOUNTER_TYPE
+table(med_rec_adm$ENCOUNTER_TYPE) 
+sum(is.na(med_rec_adm$ENCOUNTER_TYPE))
+
+#Hospital admission date and time
+med_rec_adm$Hsp_Adm_DTTM_DS
+sum(is.na(med_rec_adm$Hsp_Adm_DTTM_DS))
+
+#Hospital discharge date and time
+med_rec_adm$Hsp_Disch_DTTM_DS
+sum(is.na(med_rec_adm$Hsp_Disch_DTTM_DS))
+
+#Code for location of medication reconciliation
+med_rec_adm$ADMIT_DEPT_ID
+dim(table(med_rec_adm$ADMIT_DEPT_ID))
+sum(is.na(med_rec_adm$ADMIT_DEPT_ID))
+med_rec_adm$ADMIT_DEPT_ID <- as.factor(med_rec_adm$ADMIT_DEPT_ID)
+
+#Location of med reconciliation - descricption
+med_rec_adm$ADMIT_DEPT
+table(med_rec_adm$ADMIT_DEPT) 
+sum(is.na(med_rec_adm$ADMIT_DEPT))
+med_rec_adm$ADMIT_DEPT <- as.factor(med_rec_adm$ADMIT_DEPT)
+
+#Code for service providering care for patient
+med_rec_adm$ADMIT_SERV_C
+table(med_rec_adm$ADMIT_SERV_C)
+sum(is.na(med_rec_adm$ADMIT_SERV_C))
+med_rec_adm$ADMIT_SERV_C <- as.factor(med_rec_adm$ADMIT_SERV_C)
+
+#Service providing care for patient - descirptive
+med_rec_adm$ADMIT_SERVICE_AREA
+dim(table(med_rec_adm$ADMIT_SERVICE_AREA))
+sum(is.na(med_rec_adm$ADMIT_SERVICE_AREA))
+med_rec_adm$ADMIT_SERVICE_AREA <- as.factor(med_rec_adm$ADMIT_SERVICE_AREA)
+
+#Code for medication confirmed with patient upon admission or discharge
+med_rec_adm$MED_REC_EVENT_C
+table(med_rec_adm$MED_REC_EVENT_C)
+sum(is.na(med_rec_adm$MED_REC_EVENT_C))
+med_rec_adm$MED_REC_EVENT_C <- as.factor(med_rec_adm$MED_REC_EVENT_C)
+
+#medication confirmed with patient upon admit or discharge - descriptive
+med_rec_adm$MED_REC_EVENT
+table(med_rec_adm$MED_REC_EVENT)
+sum(is.na(med_rec_adm$MED_REC_EVENT))
+
+#was patient inpatient or outpatient - all outpatient
+med_rec_adm$MED_ORDERING_MODE
+table(med_rec_adm$MED_ORDERING_MODE)
+sum(is.na(med_rec_adm$MED_ORDERING_MODE))
+
+#Date med was ordered
+med_rec_adm$MED_ORDER_DTTM_DS
+sum(is.na(med_rec_adm$MED_ORDER_DTTM_DS))
+
+#date med was discontinued
+med_rec_adm$MED_DC_DTTM_DS
+sum(is.na(med_rec_adm$MED_DC_DTTM_DS))
+
+#date med was reconciled
+med_rec_adm$MED_REC_DTTM_DS
+sum(is.na(med_rec_adm$MED_REC_DTTM_DS))
+
+#All values are the same - 35000
+med_rec_adm$MED_REC_TYPE_C
+table(med_rec_adm$MED_REC_TYPE_C)
+sum(is.na(med_rec_adm$MED_REC_TYPE_C))
+
+#all values are the same - "IP Admission Reconciliation""
+med_rec_adm$MED_REC_TYPE
+table(med_rec_adm$MED_REC_TYPE)
+sum(is.na(med_rec_adm$MED_REC_TYPE))
+
+#Code for determined status of meds during reconciliation
+med_rec_adm$MED_REC_ACTION_C
+table(med_rec_adm$MED_REC_ACTION_C)
+sum(is.na(med_rec_adm$MED_REC_ACTION_C))
+med_rec_adm$MED_REC_ACTION_C <- as.factor(med_rec_adm$MED_REC_ACTION_C)
+
+#Determined status of meds during reconciliation - descriptive
+med_rec_adm$MED_REC_ACTION
+table(med_rec_adm$MED_REC_ACTION)
+sum(is.na(med_rec_adm$MED_REC_ACTION))
+med_rec_adm$MED_REC_ACTION <- as.factor(med_rec_adm$MED_REC_ACTION)
+   
+# "RSN_FOR_DISCON_C"   "RSN_FOR_DISCON_MED"
+med_rec_adm$RSN_FOR_DISCON_C
+table(med_rec_adm$RSN_FOR_DISCON_C)
+sum(is.na(med_rec_adm$RSN_FOR_DISCON_C))
+
+med_rec_adm$RSN_FOR_DISCON_MED
+table(med_rec_adm$RSN_FOR_DISCON_MED)
+sum(is.na(med_rec_adm$RSN_FOR_DISCON_MED))
+
+#[25] "MEDICATION_ID"      "MEDICATION"   
+
+med_rec_adm$MEDICATION_ID
+length(unique(med_rec_adm$MEDICATION_ID))
+sum(is.na(med_rec_adm$MEDICATION_ID))
+
+med_rec_adm$MEDICATION
+length(unique(med_rec_adm$MEDICATION))
+sum(is.na(med_rec_adm$MEDICATION))
+
+
+med_rec_adm$ORDER_MED_DOSE
+length(unique(med_rec_adm$ORDER_MED_DOSE))
+sum(is.na(med_rec_adm$ORDER_MED_DOSE))
+
+#how med was administered - IV, topical, oral
+med_rec_adm$MED_ROUTE
+table(med_rec_adm$MED_ROUTE)
+sum(is.na(med_rec_adm$MED_ROUTE))
+med_rec_adm$MED_ROUTE <- as.factor(med_rec_adm$MED_ROUTE)
+
+#How often the med needs to be taken
+med_rec_adm$ORDER_MED_FREQ
+dim(table(med_rec_adm$ORDER_MED_FREQ))
+sum(is.na(med_rec_adm$ORDER_MED_FREQ))
+med_rec_adm$ORDER_MED_FREQ <- as.factor(med_rec_adm$ORDER_MED_FREQ)
+
+#Code for Therapeutic status
+med_rec_adm$THERA_CLASS_C
+dim(table(med_rec_adm$THERA_CLASS_C))
+sum(is.na(med_rec_adm$THERA_CLASS_C))
+med_rec_adm$THERA_CLASS_C <- as.factor(med_rec_adm$THERA_CLASS_C)
+
+#Descriptive for Therapeutic status
+med_rec_adm$THERA_CLASS
+dim(table(med_rec_adm$THERA_CLASS))
+sum(is.na(med_rec_adm$THERA_CLASS))
+med_rec_adm$THERA_CLASS_C <- as.factor(med_rec_adm$THERA_CLASS_C)
+
+#Code for Pharmaceutical class
+med_rec_adm$PHARM_CLASS_C
+dim(table(med_rec_adm$PHARM_CLASS_C))
+sum(is.na(med_rec_adm$PHARM_CLASS_C))
+med_rec_adm$PHARM_CLASS_C <- as.factor(med_rec_adm$PHARM_CLASS_C)
+
+#Descriptive for Pharmaceutical class
+med_rec_adm$PHARM_CLASS
+dim(table(med_rec_adm$PHARM_CLASS))
+sum(is.na(med_rec_adm$PHARM_CLASS))
+med_rec_adm$PHARM_CLASS <- as.factor(med_rec_adm$PHARM_CLASS)
+
+#Code for pharmaceutical sub class name
+med_rec_adm$PHARM_SUBCLASS_C
+dim(table(med_rec_adm$PHARM_SUBCLASS_C))
+sum(is.na(med_rec_adm$PHARM_SUBCLASS_C))
+med_rec_adm$PHARM_SUBCLASS_C <- as.factor(med_rec_adm$PHARM_SUBCLASS_C)
+
+#Descriptive for pharmaceutical sub class name
+med_rec_adm$PHARM_SUB_CLASS
+dim(table(med_rec_adm$PHARM_SUB_CLASS))
+sum(is.na(med_rec_adm$PHARM_SUB_CLASS))
+med_rec_adm$PHARM_SUB_CLASS <- as.factor(med_rec_adm$PHARM_SUB_CLASS)
+
+med_rec_adm$EVENT_MED_REC_LINE
+dim(table(med_rec_adm$EVENT_MED_REC_LINE))
+sum(is.na(med_rec_adm$EVENT_MED_REC_LINE))
+
+
+anti_viral_med_rec_adm <- subset(med_rec_adm, THERA_CLASS == "ANTIVIRALS")
+
+dim(anti_viral_med_rec_adm)#1296
+
+
+
+```
+
+
+
+
+```{r}
+##########Med_Rec_Dc File########
+med_rec_dc<-read_delim("Z:/RawData/TextFormat/Med_Rec_Dc.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+med_rec_dc<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Med_Rec_Dc.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for data
+
+str(med_rec_dc)
+head(med_rec_dc)
+names(med_rec_dc)
+dim(med_rec_dc)
+
+#Patient ID's
+length(unique(med_rec_dc$PATIENT_ID))
+sum(is.na(med_rec_dc$PATIENT_ID))
+
+#Encournter ID
+length(unique(med_rec_dc$ENCOUNTER_ID))
+sum(is.na(med_rec_dc$ENCOUNTER_ID)) 
+
+# serial # of patient contact
+length(unique(med_rec_dc$PAT_ENC_CSN_ID_DID))
+sum(is.na(med_rec_dc$PAT_ENC_CSN_ID_DID)) 
+
+#encounter Type
+table(med_rec_dc$ENC_TYPE_C) 
+sum(is.na(med_rec_dc$ENC_TYPE_C))
+
+med_rec_dc$ENC_TYPE
+table(med_rec_dc$ENC_TYPE) 
+sum(is.na(med_rec_dc$ENC_TYPE))
+
+#Encounter Type
+table(med_rec_dc$Enc_eio)
+sum(is.na(med_rec_dc$Enc_eio))
+med_rec_dc$Enc_eio <- as.factor(med_rec_dc$Enc_eio)
+
+
+#hopital admission date and time for 
+med_rec_dc$Hsp_Adm_DTTM_DS
+sum(is.na(med_rec_dc$Hsp_Adm_DTTM_DS))
+
+#hopital discharge date and time
+med_rec_dc$Hsp_Disch_DTTM_DS
+sum(is.na(med_rec_dc$Hsp_Disch_DTTM_DS))
+
+#location of medication reconciliation
+med_rec_dc$DC_DEPT_ID
+dim(table(med_rec_dc$DC_DEPT_ID))
+table(med_rec_dc$DC_DEPT_ID)
+sum(is.na(med_rec_dc$DC_DEPT_ID))
+med_rec_dc$DC_DEPT_ID <- as.factor(med_rec_dc$DC_DEPT_ID)
+
+#location of med reconciliation = descriptive
+med_rec_dc$DC_DEPT
+table(med_rec_dc$DC_DEPT) 
+sum(is.na(med_rec_dc$DC_DEPT))
+med_rec_dc$DC_DEPT <- as.factor(med_rec_dc$DC_DEPT)
+
+#service line providing care for patient
+med_rec_dc$DC_SERV_C
+table(med_rec_dc$DC_SERV_C)
+sum(is.na(med_rec_dc$DC_SERV_C))
+med_rec_dc$DC_SERV_C <- as.factor(med_rec_dc$DC_SERV_C)
+
+#service line providing care for patients - descriptive
+med_rec_dc$DC_SERVICE_AREA
+dim(table(med_rec_dc$DC_SERVICE_AREA))
+table(med_rec_dc$DC_SERVICE_AREA)
+sum(is.na(med_rec_dc$DC_SERVICE_AREA))
+med_rec_dc$DC_SERVICE_AREA <- as.factor(med_rec_dc$DC_SERVICE_AREA)
+
+#medication confirmed upon discharge - all same value
+med_rec_dc$ADT_DC_EVENT_C
+table(med_rec_dc$ADT_DC_EVENT_C)
+sum(is.na(med_rec_dc$ADT_DC_EVENT_C))
+
+#medication confirmed upon discharge - all same value
+med_rec_dc$ADT_DC_EVENT
+table(med_rec_dc$ADT_DC_EVENT)
+sum(is.na(med_rec_dc$ADT_DC_EVENT))
+
+#
+med_rec_dc$DC_DISP_C
+table(med_rec_dc$DC_DISP_C)
+sum(is.na(med_rec_dc$DC_DISP_C))
+med_rec_dc$DC_DISP_C <- as.factor(med_rec_dc$DC_DISP_C)
+
+#Disposition
+med_rec_dc$DC_DISPOSITION
+table(med_rec_dc$DC_DISPOSITION)
+sum(is.na(med_rec_dc$DC_DISPOSITION))
+med_rec_dc$DC_DISPOSITION <- as.factor(med_rec_dc$DC_DISPOSITION)
+
+#Med confirmed with patient upon discharge
+med_rec_dc$MED_REC_EVENT_C
+table(med_rec_dc$MED_REC_EVENT_C)
+sum(is.na(med_rec_dc$MED_REC_EVENT_C))
+
+#medication confirmed with patient upon discharge - all same value
+med_rec_dc$MED_REC_EVENT
+table(med_rec_dc$MED_REC_EVENT)
+sum(is.na(med_rec_dc$MED_REC_EVENT))
+
+#where medication ordered
+med_rec_dc$MED_ORDERING_MODE
+table(med_rec_dc$MED_ORDERING_MODE)
+sum(is.na(med_rec_dc$MED_ORDERING_MODE))
+med_rec_dc$MED_ORDERING_MODE <- as.factor(med_rec_dc$MED_ORDERING_MODE)
+
+
+med_rec_dc$MED_ORDER_DTTM_DS
+sum(is.na(med_rec_dc$MED_ORDER_DTTM_DS))
+
+med_rec_dc$MED_DC_DTTM_DS
+sum(is.na(med_rec_dc$MED_DC_DTTM_DS))
+
+med_rec_dc$MED_REC_DTTM_DS
+sum(is.na(med_rec_dc$MED_REC_DTTM_DS))
+
+
+med_rec_dc$MED_REC_TYPE_C
+table(med_rec_dc$MED_REC_TYPE_C)
+sum(is.na(med_rec_dc$MED_REC_TYPE_C))
+
+#all values are the same but 1 is blank = "IP Discharge Reconciltion"
+med_rec_dc$MED_REC_TYPE
+table(med_rec_dc$MED_REC_TYPE)
+sum(is.na(med_rec_dc$MED_REC_TYPE))
+
+#determined status of medication during reconciliation
+med_rec_dc$MED_REC_ACTION_C
+table(med_rec_dc$MED_REC_ACTION_C)
+sum(is.na(med_rec_dc$MED_REC_ACTION_C))
+med_rec_dc$MED_REC_ACTION_C <- as.factor(med_rec_dc$MED_REC_ACTION_C)
+
+#determined status of medication during reconciliation - desciptive
+med_rec_dc$MED_REC_ACTION
+table(med_rec_dc$MED_REC_ACTION)
+sum(is.na(med_rec_dc$MED_REC_ACTION))
+med_rec_dc$MED_REC_ACTION <- as.factor(med_rec_dc$MED_REC_ACTION)
+   
+# "RSN_FOR_DISCON_C"   "RSN_FOR_DISCON_MED"
+med_rec_dc$RSN_FOR_DISCON_C
+table(med_rec_dc$RSN_FOR_DISCON_C)
+sum(is.na(med_rec_dc$RSN_FOR_DISCON_C))
+
+med_rec_dc$RSN_FOR_DISCON_MED
+table(med_rec_dc$RSN_FOR_DISCON_MED)
+sum(is.na(med_rec_dc$RSN_FOR_DISCON_MED))
+
+#"MEDICATION_ID"        
+
+med_rec_dc$MEDICATION_ID
+table(med_rec_dc$MEDICATION_ID)
+dim(table(med_rec_dc$MEDICATION_ID))
+sum(is.na(med_rec_dc$MEDICATION_ID))
+med_rec_dc$MEDICATION_ID <- as.factor(med_rec_dc$MEDICATION_ID)
+
+#"MEDICATION" 
+med_rec_dc$MEDICATION
+table(med_rec_dc$MEDICATION)
+dim(table(med_rec_dc$MEDICATION))
+sum(is.na(med_rec_dc$MEDICATION))
+med_rec_dc$MEDICATION <- as.factor(med_rec_dc$MEDICATION)
+
+#dosage of meds
+med_rec_dc$ORDER_MED_DOSE
+length(unique(med_rec_dc$ORDER_MED_DOSE))
+sum(is.na(med_rec_dc$ORDER_MED_DOSE))
+med_rec_dc$ORDER_MED_DOSE <- as.factor(med_rec_dc$ORDER_MED_DOSE)
+
+#how the med was administered
+med_rec_dc$MED_ROUTE
+table(med_rec_dc$MED_ROUTE)
+dim(table(med_rec_dc$MED_ROUTE))
+sum(is.na(med_rec_dc$MED_ROUTE))
+med_rec_dc$MED_ROUTE <- as.factor(med_rec_dc$MED_ROUTE)
+
+#frequency of dosage
+med_rec_dc$ORDER_MED_FREQ
+dim(table(med_rec_dc$ORDER_MED_FREQ))
+sum(is.na(med_rec_dc$ORDER_MED_FREQ))
+med_rec_dc$ORDER_MED_FREQ <- as.factor(med_rec_dc$ORDER_MED_FREQ)
+
+
+med_rec_dc$THERA_CLASS_C
+dim(table(med_rec_dc$THERA_CLASS_C))
+sum(is.na(med_rec_dc$THERA_CLASS_C))
+med_rec_dc$THERA_CLASS_C <- as.factor(med_rec_dc$THERA_CLASS_C)
+
+med_rec_dc$PHARM_CLASS_C
+dim(table(med_rec_dc$PHARM_CLASS_C))
+sum(is.na(med_rec_dc$PHARM_CLASS_C))
+med_rec_dc$PHARM_CLASS_C <- as.factor(med_rec_dc$PHARM_CLASS_C)
+
+med_rec_dc$MED_PHARM_CLASS
+dim(table(med_rec_dc$MED_PHARM_CLASS))
+sum(is.na(med_rec_dc$MED_PHARM_CLASS))
+med_rec_dc$MED_PHARM_CLASS <- as.factor(med_rec_dc$MED_PHARM_CLASS)
+
+med_rec_dc$PHARM_SUBCLASS_C
+dim(table(med_rec_dc$PHARM_SUBCLASS_C))
+sum(is.na(med_rec_dc$PHARM_SUBCLASS_C))
+med_rec_dc$PHARM_SUBCLASS_C <- as.factor(med_rec_dc$PHARM_SUBCLASS_C)
+
+med_rec_dc$PHARM_SUB_CLASS
+dim(table(med_rec_dc$PHARM_SUB_CLASS))
+sum(is.na(med_rec_dc$PHARM_SUB_CLASS))
+med_rec_dc$PHARM_SUB_CLASS <- as.factor(med_rec_dc$PHARM_SUB_CLASS)
+
+med_rec_dc$EVENT_MED_REC_LINE
+dim(table(med_rec_dc$EVENT_MED_REC_LINE))
+sum(is.na(med_rec_dc$EVENT_MED_REC_LINE))
+
+```
+
+
+
+```{r}
+##########Meds_Inpt File########
+meds_inpt <- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Meds_Inpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Laura's path for new data files
+meds_inpt<- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Meds_Inpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
+
+str(meds_inpt)
+head(meds_inpt)
+dim(meds_inpt)
+
+
+#Patient_ID and extract to CSV
+sum(is.na(meds_inpt$Patient_ID))
+write.table(meds_inpt$Patient_ID, file = paste("C:/Users/laura.olson/",'meds_inpt_Patient_ID.csv',sep = '/'), row.names = F) #save all Patient IDs as CSV
+
+#Encounter_ID
+sum(is.na(meds_inpt$Encounter_ID))
+
+#Pat_Enc_Csn_ID_DID
+sum(is.na(meds_inpt$Pat_Enc_Csn_ID_DID))
+
+#HSP_ADM_DTTM_DS
+sum(is.na(meds_inpt$HSP_ADM_DTTM_DS))
+
+#HSP_Disch_DTTM_DS
+sum(is.na(meds_inpt$HSP_Disch_DTTM_DS))
+
+#Med_Dept
+sum(is.na(meds_inpt$Med_Dept))
+meds_inpt$Med_Dept <- as.factor(meds_inpt$Med_Dept)
+
+#Order_DT_DS
+sum(is.na(meds_inpt$Order_DT_DS))
+
+#Thera_class_c
+sum(is.na(meds_inpt$Thera_class_c))
+meds_inpt$Thera_class_c <- as.factor(meds_inpt$Thera_class_c)
+
+#Thera_class
+sum(is.na(meds_inpt$Thera_class))
+meds_inpt$Thera_class <- as.factor(meds_inpt$Thera_class)
+
+#Pharm_class_c
+sum(is.na(meds_inpt$Pharm_class_c))
+meds_inpt$Pharm_class_c <- as.factor(meds_inpt$Pharm_class_c)
+
+#Pharm_class
+sum(is.na(meds_inpt$Pharm_class))
+meds_inpt$Pharm_class <- as.factor(meds_inpt$Pharm_class)
+
+#Pharm_subclass_c
+sum(is.na(meds_inpt$Pharm_subclass_c))
+meds_inpt$Pharm_subclass_c <- as.factor(meds_inpt$Pharm_subclass_c)
+
+#Pharm_subclass
+sum(is.na(meds_inpt$Pharm_subclass))
+meds_inpt$Pharm_subclass <- as.factor(meds_inpt$Pharm_subclass)
+
+#Medication_id
+sum(is.na(meds_inpt$Medication_id))
+meds_inpt$Medication_id <- as.character(meds_inpt$Medication_id)
+
+#Medication_id
+sum(is.na(meds_inpt$Medication))
+meds_inpt$Medication <- as.character(meds_inpt$Medication)
+
+#GPI
+sum(is.na(meds_inpt$GPI))
+
+#Generic_name
+sum(is.na(meds_inpt$Generic_name))
+meds_inpt$Generic_name <- as.factor(meds_inpt$Generic_name)
+
+#Order_Med_Dose
+sum(is.na(meds_inpt$Order_Med_Dose))
+meds_inpt$Order_Med_Dose <- as.factor(meds_inpt$Order_Med_Dose)
+
+#Med_Route
+sum(is.na(meds_inpt$Med_Route))
+meds_inpt$Med_Route <- as.factor(meds_inpt$Med_Route)
+
+#Order_Med_Freq
+sum(is.na(meds_inpt$Order_Med_Freq))
+meds_inpt$Order_Med_Freq <- as.factor(meds_inpt$Order_Med_Freq)
+
+#Order_Start_DTTM_DS
+sum(is.na(meds_inpt$Order_Start_DTTM_DS))
+
+#Order_End_DTTM_DS
+sum(is.na(meds_inpt$Order_End_DTTM_DS))
+
+#MAR_Dose
+sum(is.na(meds_inpt$MAR_Dose))
+meds_inpt$MAR_Dose <- as.factor(meds_inpt$MAR_Dose)
+
+#MAR_Gave_DTTM_DS
+sum(is.na(meds_inpt$MED_Gave_DTTM_DS))
+
+#MAR_Sched_DTTM_DS
+sum(is.na(meds_inpt$MED_Sched_DTTM_DS))
+
+#MAR_Action
+sum(is.na(meds_inpt$MAR_Action))
+meds_inpt$MAR_Action <- as.factor(meds_inpt$MAR_Action)
+
+#Ordering_Mode
+sum(is.na(meds_inpt$Ordering_Mode))
+meds_inpt$Ordering_Mode <- as.factor(meds_inpt$Ordering_Mode)
+
+#Check cleaned data
+str(meds_inpt)
+
+
+```
+
+
+```{r}
+##########Meds_Outpt File########
+
+meds_outpt<-read_delim("Z:/RawData/TextFormat/Meds_Outpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+meds_outpt<- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Meds_Outpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
+
+str(meds_outpt)
+head(meds_outpt)
+dim(meds_outpt)
+
+#Patient_ID
+sum(is.na(meds_outpt$Patient_ID))
+
+#Encounter_ID
+sum(is.na(meds_outpt$Encounter_ID))
+
+#Pat_Enc_Csn_ID_DID
+sum(is.na(meds_outpt$Pat_Enc_Csn_ID_DID))
+
+#Pat_Enc_DT_DS
+sum(is.na(meds_outpt$Enc_DT_DS))
+
+#Med_Dept
+sum(is.na(meds_outpt$Med_Dept))
+meds_outpt$Med_Dept <- as.factor(meds_outpt$Med_Dept)
+
+#Order_DT_DS
+sum(is.na(meds_outpt$Order_DT_DS))
+
+#Thera_class_c
+sum(is.na(meds_outpt$Thera_class_c))
+meds_outpt$Thera_class_c <- as.factor(meds_outpt$Thera_class_c)
+
+#Thera_class
+sum(is.na(meds_outpt$Thera_class))
+meds_outpt$Thera_class <- as.factor(meds_outpt$Thera_class)
+
+#Pharm_class_c
+sum(is.na(meds_outpt$Pharm_class_c))
+meds_outpt$Pharm_class_c <- as.factor(meds_outpt$Pharm_class_c)
+
+#Pharm_class
+sum(is.na(meds_outpt$Pharm_class))
+meds_outpt$Pharm_class <- as.factor(meds_outpt$Pharm_class)
+
+#Pharm_subclass_c
+sum(is.na(meds_outpt$Pharm_subclass_c))
+meds_outpt$Pharm_subclass_c <- as.factor(meds_outpt$Pharm_subclass_c)
+
+#Pharm_subclass
+sum(is.na(meds_outpt$Pharm_subclass))
+meds_outpt$Pharm_subclass <- as.factor(meds_outpt$Pharm_subclass)
+
+#Medication_id
+sum(is.na(meds_outpt$Medication_id))
+meds_outpt$Medication_id <- as.character(meds_outpt$Medication_id)
+
+#Medication_id
+sum(is.na(meds_outpt$Medication))
+meds_outpt$Medication <- as.character(meds_outpt$Medication)
+
+#GPI
+sum(is.na(meds_outpt$GPI))
+
+#Generic_name
+sum(is.na(meds_outpt$Generic_name))
+meds_outpt$Generic_name <- as.factor(meds_outpt$Generic_name)
+
+#SIG
+sum(is.na(meds_outpt$SIG))
+meds_outpt$SIG <- as.character(meds_outpt$SIG)
+
+#QUANTITY
+sum(is.na(meds_outpt$QUANTITY))
+
+#REFILLS
+sum(is.na(meds_outpt$REFILLS))
+meds_outpt$REFILLS <- as.integer(meds_outpt$REFILLS)
+
+#Order_Med_Dose
+sum(is.na(meds_outpt$Order_Med_Dose))
+meds_outpt$Order_Med_Dose <- as.factor(meds_outpt$Order_Med_Dose)
+
+#Med_Route
+sum(is.na(meds_outpt$Med_Route))
+meds_outpt$Med_Route <- as.factor(meds_outpt$Med_Route)
+
+#Order_Med_Freq
+sum(is.na(meds_outpt$Order_Med_Freq))
+meds_outpt$Order_Med_Freq <- as.factor(meds_outpt$Order_Med_Freq)
+
+#Order_Start_DTTM_DS
+sum(is.na(meds_outpt$Order_Start_DTTM_DS))
+
+#Order_End_DTTM_DS
+sum(is.na(meds_outpt$Order_End_DTTM_DS))
+
+#Ordering_Mode
+sum(is.na(meds_outpt$Ordering_Mode))
+meds_outpt$Ordering_Mode <- as.factor(meds_outpt$Ordering_Mode)
+
+```
+
+
+```{r}
+##########Procedure_ICD File########
+procedure_icd<-read_delim("Z:/RawData/TextFormat/Procedure_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+
+str(procedure_icd)
+head(procedure_icd)
+dim(procedure_icd)
+
+```
+
+
+```{r}
+##########Social_Hx File########
+social_hx<-read_delim("Z:/RawData/TextFormat/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+social_hx<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path
+social_hx<-read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path for new file
+str(social_hx)
+head(social_hx)
+dim(social_hx)
+names(social_hx)
+
+social_hx$Patient_ID
+sum(is.na(social_hx$Patient_ID))
+
+social_hx$Encounter_ID
+sum(is.na(social_hx$Encounter_ID))
+
+social_hx$Pat_Enc_Csn_ID_DID
+sum(is.na(social_hx$Pat_Enc_Csn_ID_DID))
+
+social_hx$Enc_DT_DS
+sum(is.na(social_hx$Enc_DT_DS))
+
+social_hx$Hx_SOURCE_C
+sum(is.na(social_hx$Hx_SOURCE_C))
+table(social_hx$Hx_SOURCE_C)
+
+social_hx$Hx_SOURCE
+sum(is.na(social_hx$Hx_SOURCE))
+table(social_hx$Hx_SOURCE)
+
+#Tobacco Use Status
+social_hx$TOBACCO_USER_C
+sum(is.na(social_hx$TOBACCO_USER_C))
+table(social_hx$TOBACCO_USER_C)
+social_hx$TOBACCO_USER_C <- as.factor(social_hx$TOBACCO_USER_C)
+
+social_hx$TOBACCO_USER
+sum(is.na(social_hx$TOBACCO_USER))
+table(social_hx$TOBACCO_USER)
+social_hx$TOBACCO_USER <- as.factor(social_hx$TOBACCO_USER)
+
+social_hx$SMOKING_TOB_USE_C
+sum(is.na(social_hx$SMOKING_TOB_USE_C))
+table(social_hx$SMOKING_TOB_USE_C)
+social_hx$SMOKING_TOB_USE_C <- as.factor(social_hx$SMOKING_TOB_USE_C)
+
+social_hx$SMOKING_TOB_USE
+sum(is.na(social_hx$SMOKING_TOB_USE))
+table(social_hx$SMOKING_TOB_USE)
+social_hx$SMOKING_TOB_USE <- as.factor(social_hx$SMOKING_TOB_USE)
+
+social_hx$TOBACCO_PAK_PER_DY
+sum(is.na(social_hx$TOBACCO_PAK_PER_DY))
+table(social_hx$TOBACCO_PAK_PER_DY)
+
+social_hx$TOBACCO_USED_YEARS
+sum(is.na(social_hx$TOBACCO_USED_YEARS))
+table(social_hx$TOBACCO_USED_YEARS)
+
+social_hx$TOBACCO_COMMENT
+sum(is.na(social_hx$TOBACCO_COMMENT))
+
+social_hx$SMOKING_START_DATE_DS
+sum(is.na(social_hx$SMOKING_START_DATE_DS))
+
+social_hx$SMOKING_QUIT_DATE_DS
+sum(is.na(social_hx$SMOKING_QUIT_DATE_DS))
+     
+social_hx$CIGARETTES_YN
+sum(is.na(social_hx$CIGARETTES_YN))
+table(social_hx$CIGARETTES_YN)
+social_hx$CIGARETTES_YN <- as.factor(social_hx$CIGARETTES_YN)
+     
+social_hx$PIPES_YN
+sum(is.na(social_hx$PIPES_YN))
+table(social_hx$PIPES_YN)
+social_hx$PIPES_YN <- as.factor(social_hx$PIPES_YN)
+
+social_hx$CIGARS_YN
+sum(is.na(social_hx$CIGARS_YN))
+table(social_hx$CIGARS_YN)
+social_hx$CIGARS_YN <- as.factor(social_hx$CIGARS_YN)
+     
+social_hx$SMOKELESS_TOB_USE_C
+sum(is.na(social_hx$SMOKELESS_TOB_USE_C))
+table(social_hx$SMOKELESS_TOB_USE_C)
+social_hx$SMOKELESS_TOB_USE_C <- as.factor(social_hx$SMOKELESS_TOB_USE_C)
+     
+social_hx$SMOKELESS_TOB_USE
+sum(is.na(social_hx$SMOKELESS_TOB_USE))
+table(social_hx$SMOKELESS_TOB_USE)
+social_hx$SMOKELESS_TOB_USE <- as.factor(social_hx$SMOKELESS_TOB_USE)
+     
+social_hx$SNUFF_YN
+sum(is.na(social_hx$SNUFF_YN))
+table(social_hx$SNUFF_YN)
+social_hx$SNUFF_YN <- as.factor(social_hx$SNUFF_YN)
+
+social_hx$CHEW_YN
+sum(is.na(social_hx$CHEW_YN))
+table(social_hx$CHEW_YN)
+social_hx$CHEW_YN <- as.factor(social_hx$CHEW_YN)
+
+social_hx$SMOKELESS_QUIT_DATE_DS
+sum(is.na(social_hx$SMOKELESS_QUIT_DATE_DS))
+
+#Alchol
+social_hx$ALCOHOL_USE_C
+sum(is.na(social_hx$ALCOHOL_USE_C))
+table(social_hx$ALCOHOL_USE_C)
+social_hx$ALCOHOL_USE_C <- as.factor(social_hx$ALCOHOL_USE_C)
+
+social_hx$ALCOHOL_USE
+sum(is.na(social_hx$ALCOHOL_USE))
+table(social_hx$ALCOHOL_USE)
+social_hx$ALCOHOL_USE <- as.factor(social_hx$ALCOHOL_USE)
+
+social_hx$HX_DRINK_TYPES_C
+sum(is.na(social_hx$HX_DRINK_TYPES_C))
+table(social_hx$HX_DRINK_TYPES_C)
+social_hx$HX_DRINK_TYPES_C <- as.factor(social_hx$HX_DRINK_TYPES_C)
+
+social_hx$HX_DRINK_TYPES
+sum(is.na(social_hx$HX_DRINK_TYPES))
+table(social_hx$HX_DRINK_TYPES)
+social_hx$HX_DRINK_TYPES <- as.factor(social_hx$HX_DRINK_TYPES)
+
+social_hx$ALCOHOL_DRINKS_WK
+sum(is.na(social_hx$ALCOHOL_DRINKS_WK))
+table(social_hx$ALCOHOL_DRINKS_WK)
+social_hx$ALCOHOL_DRINKS_WK <- as.factor(social_hx$ALCOHOL_DRINKS_WK)
+
+social_hx$ALCOHOL_OZ_PER_WK
+sum(is.na(social_hx$ALCOHOL_OZ_PER_WK))
+table(social_hx$ALCOHOL_OZ_PER_WK)
+social_hx$ALCOHOL_OZ_PER_WK <- as.factor(social_hx$ALCOHOL_OZ_PER_WK)
+
+social_hx$ALCOHOL_COMMENT
+sum(is.na(social_hx$ALCOHOL_COMMENT))
+table(social_hx$ALCOHOL_COMMENT)
+
+#Drug Use
+social_hx$ILL_DRUG_USER_C
+sum(is.na(social_hx$ILL_DRUG_USER_C))
+table(social_hx$ILL_DRUG_USER_C)
+social_hx$ILL_DRUG_USER_C <- as.factor(social_hx$ILL_DRUG_USER_C)
+
+social_hx$ILL_DRUG_USER
+sum(is.na(social_hx$ILL_DRUG_USER))
+table(social_hx$ILL_DRUG_USER)
+social_hx$ILL_DRUG_USER <- as.factor(social_hx$ILL_DRUG_USER)
+
+social_hx$IV_DRUG_USER_YN
+sum(is.na(social_hx$IV_DRUG_USER_YN))
+table(social_hx$IV_DRUG_USER_YN)
+social_hx$IV_DRUG_USER_YN <- as.factor(social_hx$IV_DRUG_USER_YN)
+
+social_hx$ILLICIT_DRUG_FREQ
+sum(is.na(social_hx$ILLICIT_DRUG_FREQ))
+table(social_hx$ILLICIT_DRUG_FREQ)
+social_hx$ILLICIT_DRUG_FREQ <- as.numeric(social_hx$ILLICIT_DRUG_FREQ)
+
+social_hx$ILLICIT_DRUG_CMT
+sum(is.na(social_hx$ILLICIT_DRUG_CMT))
+
+#Sexual Activity
+social_hx$SEXUALLY_ACTIVE_C
+sum(is.na(social_hx$SEXUALLY_ACTIVE_C))
+table(social_hx$SEXUALLY_ACTIVE_C)
+social_hx$SEXUALLY_ACTIVE_C <- as.factor(social_hx$SEXUALLY_ACTIVE_C)
+
+social_hx$SEXUALLY_ACTIVE
+sum(is.na(social_hx$SEXUALLY_ACTIVE))
+table(social_hx$SEXUALLY_ACTIVE)
+social_hx$SEXUALLY_ACTIVE <- as.factor(social_hx$SEXUALLY_ACTIVE)
+
+social_hx$FEMALE_PARTNER_YN
+sum(is.na(social_hx$FEMALE_PARTNER_YN))
+table(social_hx$FEMALE_PARTNER_YN)
+social_hx$FEMALE_PARTNER_YN <- as.factor(social_hx$FEMALE_PARTNER_YN)
+
+social_hx$MALE_PARTNER_YN
+sum(is.na(social_hx$MALE_PARTNER_YN))
+table(social_hx$MALE_PARTNER_YN)
+social_hx$MALE_PARTNER_YN <- as.factor(social_hx$MALE_PARTNER_YN)
+
+#Birth Control
+social_hx$CONDOM_YN
+sum(is.na(social_hx$CONDOM_YN))
+table(social_hx$CONDOM_YN)
+social_hx$CONDOM_YN <- as.factor(social_hx$CONDOM_YN)
+
+social_hx$PILL_YN
+sum(is.na(social_hx$PILL_YN))
+table(social_hx$PILL_YN)
+social_hx$PILL_YN <- as.factor(social_hx$PILL_YN)
+
+social_hx$DIAPHRAGM_YN
+sum(is.na(social_hx$DIAPHRAGM_YN))
+table(social_hx$DIAPHRAGM_YN)
+social_hx$DIAPHRAGM_YN <- as.factor(social_hx$DIAPHRAGM_YN)
+
+social_hx$IUD_YN
+sum(is.na(social_hx$IUD_YN))
+table(social_hx$IUD_YN)
+social_hx$IUD_YN <- as.factor(social_hx$IUD_YN)
+
+social_hx$SURGICAL_YN
+sum(is.na(social_hx$SURGICAL_YN))
+table(social_hx$SURGICAL_YN)
+social_hx$SURGICAL_YN <- as.factor(social_hx$SURGICAL_YN)
+
+social_hx$SPERMICIDE_YN
+sum(is.na(social_hx$SPERMICIDE_YN))
+table(social_hx$SPERMICIDE_YN)
+social_hx$SPERMICIDE_YN <- as.factor(social_hx$SPERMICIDE_YN)
+
+social_hx$IMPLANT_YN
+sum(is.na(social_hx$IMPLANT_YN))
+table(social_hx$IMPLANT_YN)
+social_hx$IMPLANT_YN <- as.factor(social_hx$IMPLANT_YN)
+
+social_hx$RHYTHM_YN
+sum(is.na(social_hx$RHYTHM_YN))
+table(social_hx$RHYTHM_YN)
+social_hx$RHYTHM_YN <- as.factor(social_hx$RHYTHM_YN)
+
+social_hx$INJECTION_YN
+sum(is.na(social_hx$INJECTION_YN))
+table(social_hx$INJECTION_YN)
+social_hx$INJECTION_YN <- as.factor(social_hx$INJECTION_YN)
+
+social_hx$SPONGE_YN
+sum(is.na(social_hx$SPONGE_YN))
+table(social_hx$SPONGE_YN)
+social_hx$SPONGE_YN <- as.factor(social_hx$SPONGE_YN)
+
+social_hx$INSERTS_YN
+sum(is.na(social_hx$INSERTS_YN))
+table(social_hx$INSERTS_YN)
+social_hx$INSERTS_YN <- as.factor(social_hx$INSERTS_YN)
+
+social_hx$ABSTINENCE_YN
+sum(is.na(social_hx$ABSTINENCE_YN))
+table(social_hx$ABSTINENCE_YN)
+social_hx$ABSTINENCE_YN <- as.factor(social_hx$ABSTINENCE_YN)
+
+social_hx$SEX_COMMENT
+sum(is.na(social_hx$SEX_COMMENT))
+
+social_hx$UNKNOWN_FAM_HX_YN
+sum(is.na(social_hx$UNKNOWN_FAM_HX_YN))
+table(social_hx$UNKNOWN_FAM_HX_YN)
+social_hx$UNKNOWN_FAM_HX_YN <- as.factor(social_hx$UNKNOWN_FAM_HX_YN)
+
+#Employment History
+social_hx$OCCUPATION_C
+sum(is.na(social_hx$OCCUPATION_C))
+table(social_hx$OCCUPATION_C)
+social_hx$OCCUPATION_C <- as.factor(social_hx$OCCUPATION_C)
+
+social_hx$OCCUPATION
+sum(is.na(social_hx$OCCUPATION))
+table(social_hx$OCCUPATION)
+social_hx$OCCUPATION <- as.factor(social_hx$OCCUPATION)
+
+social_hx$EMPY_STATUS_C
+sum(is.na(social_hx$EMPY_STATUS_C))
+table(social_hx$EMPY_STATUS_C)
+social_hx$EMPY_STATUS_C <- as.factor(social_hx$EMPY_STATUS_C)
+
+social_hx$EMPLOYMENT_STATUS
+sum(is.na(social_hx$EMPLOYMENT_STATUS))
+table(social_hx$EMPLOYMENT_STATUS)
+social_hx$EMPLOYMENT_STATUS <- as.factor(social_hx$EMPLOYMENT_STATUS)          
+ 
+
+```
+
+
+```{r}
+###############Demo File##############
+demo<-read_delim("Z:/RawData/TextFormat/Demo.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+demo<-read_delim("Z:/Hepatitis C Project/RAW NEW 3.28.2017/Demo_no_ED_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path for new demo table
+
+str(demo)
+dim(demo)
+
+#patient id
+demo$PATIENT_ID
+sum(is.na(demo$PATIENT_ID))
+
+#DOB
+demo$DOB_DS
+sum(is.na(demo$PATIENT_ID))
+
+#Gender
+demo$Gender
+unique(demo$Gender)
+(table(demo$Gender))
+sum(is.na(demo$Gender))
+demo$Gender <- as.factor(demo$Gender)
+
+#Flag Gender
+demo$Flag_Gender
+unique(demo$Flag_Gender)
+sum(is.na(demo$Flag_Gender))
+
+#Race
+demo$Race_Code
+unique(demo$Race_Code)
+(table(demo$Race_Code))
+sum(is.na(demo$Race_Code))
+demo$Race_Code <- as.factor(demo$Race_Code)
+
+demo$Race
+unique(demo$Race)
+(table(demo$Race))
+sum(is.na(demo$Race))
+demo$Race <- as.factor(demo$Race)
+
+#Ethnic
+demo$Ethnic_Code
+unique(demo$Ethnic_Code)
+(table(demo$Ethnic_Code))
+sum(is.na(demo$Ethnic_Code))
+demo$Ethnic_Code <- as.factor(demo$Ethnic_Code)
+
+demo$Ethnicity
+unique(demo$Ethnicity)
+(table(demo$Ethnicity))
+sum(is.na(demo$Ethnicity))
+demo$Ethnicity <- as.factor(demo$Ethnicity)
+
+#Language
+demo$Language_Code
+unique(demo$Language_Code)
+(table(demo$Language_Code))
+sum(is.na(demo$Language_Code))
+demo$Language_Code <- as.factor(Language_Code)
+
+demo$Language
+unique(demo$Language)
+dim(table(demo$Language))
+sum(is.na(demo$Language))
+demo$Language <- as.factor(demo$Language)
+
+#Marital_Status
+demo$Marital_Status_Code
+unique(demo$Marital_Status_Code)
+dim(table(demo$Marital_Status_Code))
+sum(is.na(demo$Marital_Status_Code))
+demo$Marital_Status_Code <- as.factor(demo$Marital_Status_Code)
+
+demo$Marital_Status
+unique(demo$Marital_Status)
+(table(demo$Marital_Status))
+sum(is.na(demo$Marital_Status))
+demo$Marital_Status <- as.factor(demo$Marital_Status)
+
+#Date of Death
+demo$DOD_DS
+sum(is.na(demo$DOD_DS))
+
+
+```
+
+```{r}
+##############Education###############
+education<-read_delim("Z:/Hepatitis C Project/RAW NEW 3.28.2017/EDUCATION_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path for new demo table
+
+str(education)
+dim(education)
+
+```
+
+```{r}
+##############Labs###############
+
+labs <- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Labs.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
+
+head(labs)
+str(labs)
+dim(labs)
+
+```
+
+```{r}
+###################Unique Patient ID Dataset - Analyzing what we have on patients############
+patient_ID_encounters <- as.data.frame(table(encounters$Patient_ID))
+colnames(patient_ID_encounters) <- c("Patient_ID", "Count_Encounters")
+
+patient_ID_diagnosis_icd <- as.data.frame(table(diagnosis_icd$patient_id))
+colnames(patient_ID_diagnosis_icd) <- c("Patient_ID", "Count_Diagnosis_ICD")
+
+merge_1 <- merge(patient_ID_encounters, patient_ID_diagnosis_icd, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
+sum(is.na(merge_1))
+
+patient_ID_cpt <- as.data.frame(table(cpt$patient_id))
+colnames(patient_ID_cpt) <- c("Patient_ID", "Count_CPT")
+
+merge_2 <- merge(merge_1, patient_ID_cpt, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
+
+patient_ID_med_rec_adm <- as.data.frame(table(med_rec_adm$PATIENT_ID))
+colnames(patient_ID_med_rec_adm) <- c("Patient_ID", "Count_Med_Rec_ADM")
+
+merge_3 <- merge(merge_2, patient_ID_med_rec_adm, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
+
+patient_ID_med_rec_dc <- as.data.frame(table(med_rec_dc$PATIENT_ID))
+colnames(patient_ID_med_rec_dc) <- c("Patient_ID", "Count_Med_Rec_DC")
+
+merge_4 <- merge(merge_3, patient_ID_med_rec_dc, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
+
+patient_ID_meds_inpt <- as.data.frame(table(meds_inpt$Patient_ID))
+colnames(patient_ID_meds_inpt) <- c("Patient_ID", "Count_Meds_Inpt")
+
+merge_5 <- merge(merge_4, patient_ID_meds_inpt, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
+
+patient_ID_meds_outpt <- as.data.frame(table(meds_outpt$Patient_ID))
+colnames(patient_ID_meds_outpt) <- c("Patient_ID", "Count_Meds_Outpt")
+
+merge_6 <- merge(merge_5, patient_ID_meds_outpt, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
+
+patient_ID_procedure_icd <- as.data.frame(table(procedure_icd$patient_id))
+colnames(patient_ID_procedure_icd) <- c("Patient_ID", "Count_Procedure_ICD")
+
+merge_7 <- merge(merge_6, patient_ID_procedure_icd, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
+
+patient_ID_social <- as.data.frame(table(social_hx$Patient_ID))
+colnames(patient_ID_social) <- c("Patient_ID", "Count_Social")
+
+merge_8 <- merge(merge_7, patient_ID_social, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
+
+patient_ID_demo <- as.data.frame(table(demo$PATIENT_ID))
+colnames(patient_ID_demo) <- c("Patient_ID", "Count_Demo")
+
+merge_9 <- merge(merge_8, patient_ID_demo, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
+
+patient_ID_labs <- as.data.frame(table(labs$patient_id))
+colnames(patient_ID_labs) <- c("Patient_ID", "Count_labs")
+
+merge_10 <- merge(merge_9, patient_ID_labs, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
+
+write.csv(merge_10, "Z:/Hepatitis C Project/patient_ID_freq.csv")
+
+#Filter out patients with a Hep C icd diagnosis
+#import hep c patient ID listing
+unique_hep_c_patient_ids<-read.csv("Z:/Hepatitis C Project/unique_hep_c_patient_ids.csv", header = TRUE)#Cindy's data path
+str(unique_hep_c_patient_ids)
+
+#filter merge_10 so only hep C patients are shown
+unique_hep_c_patients_freq <- subset(merge_10, Patient_ID %in% unique_hep_c_patient_ids$PATIENT_ID) 
+
+#Export to csv
+write.csv(unique_hep_c_patients_freq, "Z:/Hepatitis C Project/unique_hep_c_patients_freq.csv")
+```
+
+```{r}
+###################Unique Encounter ID Dataset - Analyzing what we have on encoutners############
+encounter_ID_encounters <- as.data.frame(table(encounters$Encounter_ID))
+colnames(encounter_ID_encounters) <- c("Encounter_ID", "Count_Encounters")
+
+encounter_ID_diagnosis_icd <- as.data.frame(table(diagnosis_icd$encounter_id))
+colnames(encounter_ID_diagnosis_icd) <- c("Encounter_ID", "Count_Diagnosis_ICD")
+
+merge_1.2 <- merge(encounter_ID_encounters, encounter_ID_diagnosis_icd, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
+
+encounter_ID_cpt <- as.data.frame(table(cpt$encounter_id))
+colnames(encounter_ID_cpt) <- c("Encounter_ID", "Count_CPT")
+
+merge_2.2 <- merge(merge_1.2, encounter_ID_cpt, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
+
+encounter_ID_med_rec_adm <- as.data.frame(table(med_rec_adm$ENCOUNTER_ID))
+colnames(encounter_ID_med_rec_adm) <- c("Encounter_ID", "Count_Med_Rec_ADM")
+
+merge_3.2 <- merge(merge_2.2, encounter_ID_med_rec_adm, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
+
+encounter_ID_med_rec_dc <- as.data.frame(table(med_rec_dc$ENCOUNTER_ID))
+colnames(encounter_ID_med_rec_dc) <- c("Encounter_ID", "Count_Med_Rec_DC")
+
+merge_4.2 <- merge(merge_3.2, encounter_ID_med_rec_dc, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
+
+encounter_ID_meds_inpt <- as.data.frame(table(meds_inpt$Encounter_ID))
+colnames(encounter_ID_meds_inpt) <- c("Encounter_ID", "Count_Meds_Inpt")
+
+merge_5.2 <- merge(merge_4.2, encounter_ID_meds_inpt, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
+
+encounter_ID_meds_outpt <- as.data.frame(table(meds_outpt$Encounter_ID))
+colnames(encounter_ID_meds_outpt) <- c("Encounter_ID", "Count_Meds_Outpt")
+
+merge_6.2 <- merge(merge_5.2, encounter_ID_meds_outpt, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
+
+encounter_ID_procedure_icd <- as.data.frame(table(procedure_icd$encounter_id))
+colnames(encounter_ID_procedure_icd) <- c("Encounter_ID", "Count_Procedure_ICD")
+
+merge_7.2 <- merge(merge_6.2, encounter_ID_procedure_icd, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
+
+encounter_ID_social <- as.data.frame(table(social_hx$Encounter_ID))
+colnames(encounter_ID_social) <- c("Encounter_ID", "Count_Social")
+
+merge_8.2 <- merge(merge_7.2, encounter_ID_social, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
+
+#encounter_ID_labs <- as.data.frame(table(labs$encounter_id))
+#colnames(encounter_ID_labs) <- c("Encounter_ID", "Count_labs")
+#################Getting error - "Error: cannot allocate vector of size 512.0 Mb"
+#merge_9.2 <- merge(merge_8.2, encounter_ID_demo, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
+
+write.csv(merge_8.2, "Z:/Hepatitis C Project/encounter_ID_freq.csv")
+
+#laura
+```
