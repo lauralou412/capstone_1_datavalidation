@@ -13,23 +13,264 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 #
 #setwd("Z:/RawData/TextFormat")
-setwd("Z:/Hepatitis C Project/RawData/TextFormat")
+setwd("Z:/RawData/TextFormat")
 library(readr)
 #install.packages("readr")
 ```
 
-```{r}
 
+
+```{r}
+## LOAD DATA
 ##########Encounters File########
-#encounters <- read_delim("Z:/RawData/TextFormat/Encounters.txt", "|", escape_double = FALSE, trim_ws = TRUE)
-encounters <- read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Encounters.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path - 647705 observations
-encounters <- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Enc.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy & Laura's path for new data files
+#Import new table revized 3/10,full file
+encounters <- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Enc.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy & Laura's path for new data files
+
+diagnosis_icd<-read_delim("Z:/RawData/TextFormat/Diagnosis_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+diagnosis_icd<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Diagnosis_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path
+
+cpt<-read_delim("Z:/RawData/TextFormat/CPT.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+cpt <- read_delim("Z:/Hepatitis C Project/RawData/TextFormat/CPT.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+
+med_rec_adm<-read_delim("Z:/RawData/TextFormat/Med_Rec_Adm.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+med_rec_adm<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Med_Rec_Adm.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+
+med_rec_dc<-read_delim("Z:/RawData/TextFormat/Med_Rec_Dc.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+med_rec_dc<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Med_Rec_Dc.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for data
+
+meds_inpt <- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Meds_Inpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Hristina's path for new data files
+meds_inpt<- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Meds_Inpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
+
+
+meds_outpt<-read_delim("Z:/RawData/TextFormat/Meds_Outpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+meds_outpt<- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Meds_Outpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
+
+procedure_icd<-read_delim("Z:/RawData/TextFormat/Procedure_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+
+social_hx<-read_delim("Z:/RawData/TextFormat/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+social_hx<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path
+social_hx<-read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path for new file
+
+relevant_icd<-read_csv("Z:/HristinasFolder/ICDCodes.xlsx - Sheet2.csv")
+
+education<-read_delim("Z:/Hepatitis C Project/RAW NEW 3.28.2017/EDUCATION_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path for new demo table
+
+labs <- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Labs.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
+
+
+```
+
+
+```{r}
+## TRANSFORM CHARACTER FORMATS
+
+encounters$Patient_ID<-as.character(encounters$Patient_ID) 
+encounters$Encounter_ID<-as.character(encounters$Encounter_ID)
+encounters$Pat_Enc_Csn_ID_DID<-as.character(encounters$Pat_Enc_Csn_ID_DID)
+encounters$Zip_Code_DID<-as.character(encounters$Zip_Code_DID)
+encounters$Enc_EIO<-as.factor(encounters$Enc_EIO)
+encounters$Enc_Type_c<-as.factor(encounters$Enc_Type_c)
+encounters$Encounter_Type<-as.factor(encounters$Encounter_Type)
+encounters$PCP_Prov_ID<-as.character(encounters$PCP_Prov_ID)
+encounters$PCP_Resource<-as.factor(encounters$PCP_Resource)
+encounters$PCP_Prov_Service_C<-as.factor(encounters$PCP_Prov_Service_C)
+encounters$PCP_Prov_Service<-as.factor(encounters$PCP_Prov_Service)
+encounters$Enc_DT_DS<-as.Date.POSIXct(encounters$Enc_DT_DS)
+encounters$Appt_DTTM_DS<-as.Date.POSIXct(encounters$Appt_DTTM_DS)
+encounters$Appt_Checkin_DTTM<-as.Date.POSIXct(encounters$Appt_Checkin_DTTM)
+encounters$Appt_Status_C<-as.factor(encounters$Appt_Status_C)
+encounters$Appt_Status<-as.factor(encounters$Appt_Status)
+encounters$Appt_Cancel_DTTM_DS<-as.Date.POSIXct(encounters$Appt_Cancel_DTTM_DS)
+encounters$Appt_Primary_Loc_ID<-as.factor(encounters$Appt_Primary_Loc_ID)
+encounters$Appt_Primary_Location<-as.factor(encounters$Appt_Primary_Location)
+encounters$Appt_Dept_ID<-as.factor(encounters$Appt_Dept_ID)
+encounters$Appt_Dept<-as.factor(encounters$Appt_Dept)
+encounters$Appt_Prov_ID<-as.character(encounters$Appt_Prov_ID)
+encounters$Appt_Resource<-as.factor(encounters$Appt_Resource)
+encounters$Appt_Prov_Service_C<-as.factor(encounters$Appt_Prov_Service_C)
+encounters$Appt_Prov_Service<-as.factor(encounters$Appt_Prov_Service)
+encounters$ED_Arrival_DTTM_DS<-as.Date.POSIXct(encounters$ED_Arrival_DTTM_DS)
+encounters$ED_Disposition_C<-as.factor(encounters$ED_Disposition_C)
+encounters$ED_Disposition<-as.factor(encounters$ED_Disposition)
+encounters$Hsp_Adm_DTTM_DS<-as.Date.POSIXct(encounters$Hsp_Adm_DTTM_DS)
+encounters$Hsp_Disch_DTTM_DS<-as.Date.POSIXct(encounters$Hsp_Disch_DTTM_DS)
+encounters$LOS_Days<-as.integer(encounters$LOS_Days)
+encounters$LOS_Hrs<-as.integer(encounters$LOS_Hrs)
+encounters$Fin_Class_C<-as.factor(encounters$Fin_Class_C)
+encounters$Fin_Class<-as.factor(encounters$Fin_Class)
+encounters$Means_of_Arrival_C<-as.factor(encounters$Means_of_Arrival_C)
+encounters$Means_of_Arrival<-as.factor(encounters$Means_of_Arrival)
+encounters$Admit_Source_C<-as.factor(encounters$Admit_Source_C)
+encounters$Admit_Source<-as.factor(encounters$Admit_Source)
+encounters$First_Enc_Dept<-as.factor(encounters$First_Enc_Dept)
+encounters$First_Enc_Service<-as.factor(encounters$First_Enc_Service)
+encounters$First_Prov_ID<-as.integer(encounters$First_Prov_ID)
+encounters$First_Resource<-as.factor(encounters$First_Resource)
+encounters$First_Prov_Specialty_C<-as.factor(encounters$First_Prov_Specialty_C)
+encounters$First_Prov_Specialty<-as.factor(encounters$First_Prov_Specialty)
+encounters$Center_C<-as.factor(encounters$Center_C)
+encounters$Center<-as.factor(encounters$Center)
+encounters$Service_Area_C<-as.factor(encounters$Service_Area_C)
+encounters$Service_Area<-as.factor(encounters$Service_Area)
+encounters$Room<-as.character(encounters$Room)
+encounters$Last_Enc_Dept<-as.factor(encounters$Last_Enc_Dept)
+encounters$Last_Enc_Service<-as.factor(encounters$Last_Enc_Service)
+encounters$Last_Prov_ID<-as.character(encounters$Last_Prov_ID)
+encounters$Last_Resource<-as.factor(encounters$Last_Resource)
+encounters$Last_Prov_Specialty_C<-as.factor(encounters$Last_Prov_Specialty_C)
+encounters$Last_Prov_Specialty<-as.factor(encounters$Last_Prov_Specialty)
+encounters$Disch_Dispo_C<-as.factor(encounters$Disch_Dispo_C)
+encounters$Disch_Dispo<-as.factor(encounters$Disch_Dispo)
+encounters$Pt_Encs<-as.integer(encounters$Pt_Encs)
+
+
+
+diagnosis_icd$patient_id<-as.character(diagnosis_icd$patient_id)
+diagnosis_icd$encounter_id<-as.character(diagnosis_icd$encounter_id)
+diagnosis_icd$enc_dt_ds<-as.Date.POSIXct(diagnosis_icd$enc_dt_ds)
+diagnosis_icd$icd_dx<-as.factor(diagnosis_icd$icd_dx)
+diagnosis_icd$icd_diagnosis<-as.factor(diagnosis_icd$icd_diagnosis)
+diagnosis_icd$dx_rank<-as.factor(diagnosis_icd$dx_rank)
+diagnosis_icd$ICD_TYPE<-as.factor(diagnosis_icd$ICD_TYPE)
+
+
+cpt$patient_id<-as.character(cpt$patient_id)
+cpt$encounter_id<-as.character(cpt$encounter_id)
+cpt$enc_dt_ds<-as.Date.POSIXct(cpt$enc_dt_ds)
+cpt$CPT<-as.factor(cpt$CPT)
+cpt$CPT_Procedure<-as.factor(cpt$CPT_Procedure)
+cpt$QUANTITY<-as.integer(cpt$QUANTITY)
+cpt$procedure_dt_ds<-as.Date.POSIXct(cpt$procedure_dt_ds)
+
+
+
+med_rec_adm$PATIENT_ID <- as.character(med_rec_adm$PATIENT_ID)
+med_rec_adm$ENCOUNTER_ID <- as.character(med_rec_adm$ENCOUNTER_ID)
+med_rec_adm$PAT_ENC_CSN_ID_DID <- as.character(med_rec_adm$PAT_ENC_CSN_ID_DID)
+med_rec_adm$Enc_EIO <- as.factor(med_rec_adm$Enc_EIO)
+med_rec_adm$ENC_TYPE_C <- as.factor(med_rec_adm$ENC_TYPE_C)
+med_rec_adm$ENCOUNTER_TYPE <- as.factor(med_rec_adm$ENCOUNTER_TYPE)
+med_rec_adm$Hsp_Adm_DTTM_DS <- as.Date.POSIXct(med_rec_adm$Hsp_Adm_DTTM_DS)
+med_rec_adm$Hsp_Disch_DTTM_DS <- as.Date.POSIXct(med_rec_adm$Hsp_Disch_DTTM_DS)
+med_rec_adm$ADMIT_DEPT_ID <- as.factor(med_rec_adm$ADMIT_DEPT_ID)
+med_rec_adm$ADMIT_DEPT <- as.factor(med_rec_adm$ADMIT_DEPT)
+med_rec_adm$ADMIT_SERV_C <- as.factor(med_rec_adm$ADMIT_SERV_C)
+med_rec_adm$ADMIT_SERVICE_AREA <- as.factor(med_rec_adm$ADMIT_SERVICE_AREA)
+med_rec_adm$MED_REC_EVENT_C <- as.factor(med_rec_adm$MED_REC_EVENT_C)
+med_rec_adm$MED_REC_EVENT <- as.factor(med_rec_adm$MED_REC_EVENT)
+med_rec_adm$MED_ORDERING_MODE <- as.factor(med_rec_adm$MED_ORDERING_MODE)
+med_rec_adm$Hsp_Disch_DTTM_DS <- as.Date.POSIXct(med_rec_adm$Hsp_Disch_DTTM_DS)
+med_rec_adm$MED_DC_DTTM_DS <- as.Date.POSIXct(med_rec_adm$MED_DC_DTTM_DS)
+med_rec_adm$MED_REC_DTTM_DS <- as.Date.POSIXct(med_rec_adm$MED_REC_DTTM_DS)
+med_rec_adm$MED_REC_TYPE_C <- as.factor(med_rec_adm$MED_REC_TYPE_C)
+med_rec_adm$MED_REC_TYPE <- as.factor(med_rec_adm$MED_REC_TYPE)
+med_rec_adm$MED_REC_ACTION_C <- as.factor(med_rec_adm$MED_REC_ACTION_C)
+med_rec_adm$MED_REC_ACTION <- as.factor(med_rec_adm$MED_REC_ACTION)
+med_rec_adm$RSN_FOR_DISCON_C <- as.factor(med_rec_adm$RSN_FOR_DISCON_C)
+med_rec_adm$RSN_FOR_DISCON_MED <- as.factor(med_rec_adm$RSN_FOR_DISCON_MED)
+med_rec_adm$MEDICATION_ID <- as.factor(med_rec_adm$MEDICATION_ID)
+med_rec_adm$MEDICATION <- as.factor(med_rec_adm$MEDICATION)
+med_rec_adm$ORDER_MED_DOSE <- as.factor(med_rec_adm$ORDER_MED_DOSE)
+med_rec_adm$MED_ROUTE <- as.factor(med_rec_adm$MED_ROUTE)
+med_rec_adm$ORDER_MED_FREQ <- as.factor(med_rec_adm$ORDER_MED_FREQ)
+med_rec_adm$THERA_CLASS_C <- as.factor(med_rec_adm$THERA_CLASS_C)
+med_rec_adm$THERA_CLASS_C <- as.factor(med_rec_adm$THERA_CLASS_C)
+med_rec_adm$PHARM_CLASS_C <- as.factor(med_rec_adm$PHARM_CLASS_C)
+med_rec_adm$PHARM_CLASS <- as.factor(med_rec_adm$PHARM_CLASS)
+med_rec_adm$PHARM_SUBCLASS_C <- as.factor(med_rec_adm$PHARM_SUBCLASS_C)
+med_rec_adm$PHARM_SUB_CLASS <- as.factor(med_rec_adm$PHARM_SUB_CLASS)
+med_rec_adm$EVENT_MED_REC_LINE <- as.integer(med_rec_adm$EVENT_MED_REC_LINE)
+
+
+
+med_rec_dc$PATIENT_ID <- as.character(med_rec_dc$PATIENT_ID)
+med_rec_dc$ENCOUNTER_ID <- as.character(med_rec_dc$ENCOUNTER_ID)
+med_rec_dc$PAT_ENC_CSN_ID_DID <- as.character(med_rec_dc$PAT_ENC_CSN_ID_DID)
+med_rec_dc$ENC_TYPE_C <- as.factor(med_rec_dc$ENC_TYPE_C)
+med_rec_dc$ENC_TYPE <- as.factor(med_rec_dc$ENC_TYPE)
+med_rec_dc$Enc_eio <- as.factor(med_rec_dc$Enc_eio)
+med_rec_dc$Hsp_Adm_DTTM_DS <- as.Date.POSIXct(med_rec_dc$Hsp_Adm_DTTM_DS)
+med_rec_dc$Hsp_Disch_DTTM_DS <- as.Date.POSIXct(med_rec_dc$Hsp_Disch_DTTM_DS)
+med_rec_dc$DC_DEPT_ID <- as.factor(med_rec_dc$DC_DEPT_ID)
+med_rec_dc$DC_DEPT <- as.factor(med_rec_dc$DC_DEPT)
+med_rec_dc$DC_SERV_C <- as.factor(med_rec_dc$DC_SERV_C)
+med_rec_dc$DC_SERVICE_AREA <- as.factor(med_rec_dc$DC_SERVICE_AREA)
+med_rec_dc$ADT_DC_EVENT_C <- as.factor(med_rec_dc$ADT_DC_EVENT_C)
+med_rec_dc$ADT_DC_EVENT <- as.factor(med_rec_dc$ADT_DC_EVENT)
+med_rec_dc$DC_DISP_C <- as.factor(med_rec_dc$DC_DISP_C)
+med_rec_dc$DC_DISPOSITION <- as.factor(med_rec_dc$DC_DISPOSITION)
+med_rec_dc$MED_REC_EVENT_C <- as.factor(med_rec_dc$MED_REC_EVENT_C)
+med_rec_dc$MED_REC_EVENT <- as.factor(med_rec_dc$MED_REC_EVENT)
+med_rec_dc$MED_ORDERING_MODE <- as.factor(med_rec_dc$MED_ORDERING_MODE)
+med_rec_dc$MED_ORDER_DTTM_DS <- as.Date.POSIXct(med_rec_dc$MED_ORDER_DTTM_DS)
+med_rec_dc$MED_DC_DTTM_DS <- as.Date.POSIXct(med_rec_dc$MED_DC_DTTM_DS)
+med_rec_dc$MED_REC_DTTM_DS <- as.Date.POSIXct(med_rec_dc$MED_REC_DTTM_DS)
+med_rec_dc$MED_REC_TYPE_C <- as.factor(med_rec_dc$MED_REC_TYPE_C)
+med_rec_dc$MED_REC_TYPE <- as.factor(med_rec_dc$MED_REC_TYPE)
+med_rec_dc$MED_REC_ACTION_C <- as.factor(med_rec_dc$MED_REC_ACTION_C)
+med_rec_dc$MED_REC_ACTION <- as.factor(med_rec_dc$MED_REC_ACTION)
+med_rec_dc$RSN_FOR_DISCON_C <- as.factor(med_rec_dc$RSN_FOR_DISCON_C)
+med_rec_dc$RSN_FOR_DISCON_MED <- as.factor(med_rec_dc$RSN_FOR_DISCON_MED)
+med_rec_dc$MEDICATION_ID <- as.factor(med_rec_dc$MEDICATION_ID)
+med_rec_dc$MEDICATION <- as.factor(med_rec_dc$MEDICATION)
+med_rec_dc$ORDER_MED_DOSE <- as.factor(med_rec_dc$ORDER_MED_DOSE)
+med_rec_dc$MED_ROUTE <- as.factor(med_rec_dc$MED_ROUTE)
+med_rec_dc$ORDER_MED_FREQ <- as.factor(med_rec_dc$ORDER_MED_FREQ)
+med_rec_dc$THERA_CLASS_C <- as.factor(med_rec_dc$THERA_CLASS_C)
+med_rec_dc$MED_THERA_CLASS <- as.factor(med_rec_dc$MED_THERA_CLASS)
+med_rec_dc$PHARM_CLASS_C <- as.factor(med_rec_dc$PHARM_CLASS_C)
+med_rec_dc$MED_PHARM_CLASS <- as.factor(med_rec_dc$MED_PHARM_CLASS)
+med_rec_dc$PHARM_SUBCLASS_C <- as.factor(med_rec_dc$PHARM_SUBCLASS_C)
+med_rec_dc$PHARM_SUB_CLASS <- as.factor(med_rec_dc$PHARM_SUB_CLASS)
+med_rec_dc$EVENT_MED_REC_LINE <- as.integer(med_rec_dc$EVENT_MED_REC_LINE)
+med_rec_dc$rownum <- as.integer(med_rec_dc$rownum)
+
+
+meds_inpt$Patient_ID <- as.character(meds_inpt$Patient_ID)
+meds_inpt$Encounter_ID <- as.character(meds_inpt$Encounter_ID)
+meds_inpt$Pat_Enc_Csn_ID_DID <- as.character(meds_inpt$Pat_Enc_Csn_ID_DID)
+meds_inpt$HSP_ADM_DTTM_DS <- as.date.POSIXct(meds_inpt$HSP_ADM_DTTM_DS)
+meds_inpt$HSP_Disch_DTTM_DS <- as.date.POSIXct(meds_inpt$HSP_Disch_DTTM_DS)
+meds_inpt$Med_Dept <- as.factor(meds_inpt$Med_Dept)
+meds_inpt$Order_DT_DS <- as.date.POSIXct(meds_inpt$Order_DT_DS)
+meds_inpt$Thera_class_c <- as.factor(meds_inpt$Thera_class_c)
+meds_inpt$Thera_class <- as.factor(meds_inpt$Thera_class)
+meds_inpt$Pharm_class_c <- as.factor(meds_inpt$Pharm_class_c)
+meds_inpt$Pharm_class <- as.factor(meds_inpt$Pharm_class)
+meds_inpt$Pharm_subclass_c <- as.factor(meds_inpt$Pharm_subclass_c)
+meds_inpt$Pharm_subclass <- as.factor(meds_inpt$Pharm_subclass)
+meds_inpt$Medication_id <- as.factor(meds_inpt$Medication_id)
+meds_inpt$Medication <- as.factor(meds_inpt$Medication)
+meds_inpt$GPI <- as.factor(meds_inpt$GPI)
+meds_inpt$Generic_name <- as.factor(meds_inpt$Generic_name)
+meds_inpt$Order_Med_Dose <- as.factor(meds_inpt$Order_Med_Dose)
+meds_inpt$Med_Route <- as.factor(meds_inpt$Med_Route)
+meds_inpt$Order_Med_Freq <- as.factor(meds_inpt$Order_Med_Freq)
+meds_inpt$Order_Start_DTTM_DS <- as.date.POSIXct(meds_inpt$Order_Start_DTTM_DS)
+meds_inpt$Order_End_DTTM_DS <- as.date.POSIXct(meds_inpt$Order_End_DTTM_DS)
+meds_inpt$MAR_Dose <- as.factor(meds_inpt$MAR_Dose)
+meds_inpt$MED_Gave_DTTM_DS <- as.date.POSIXct(meds_inpt$MED_Gave_DTTM_DS)
+meds_inpt$Order_End_DTTM_DS <- as.date.POSIXct(meds_inpt$Order_End_DTTM_DS)
+meds_inpt$MAR_Action <- as.factor(meds_inpt$MAR_Action)
+meds_inpt$Ordering_Mode <- as.factor(meds_inpt$Ordering_Mode)
+
+
+```
+
+
+
+```{r}
+## DATA VALIDATION
+
+
+####Explore data
 
 str(encounters)
 tail(encounters)
 dim(encounters)
 
 #Patient_ID
+summary(encounters$Patient_ID_fac)
 sum(is.na(encounters$Patient_ID))
 
 #Encounter_ID
@@ -40,7 +281,6 @@ sum(is.na(encounters$Pat_Enc_Csn_ID_DID))
 
 #Zip_Code_DID
 sum(is.na(encounters$Zip_Code_DID))
-encounters$Zip_Code_DID<-as.character(encounters$Zip_Code_DID)
 
 #ENC_AGE
 sum(is.na(encounters$ENC_AGE))
@@ -50,34 +290,27 @@ sum(is.na(encounters$Enc_EIO))
 
 #Enc_Type_c
 sum(is.na(encounters$Enc_Type_c))
-encounters$Enc_Type_c<-as.factor(encounters$Enc_Type_c)
 
 #Encounter_Type
 sum(is.na(encounters$Encounter_Type))
-encounters$Encounter_Type<-as.factor(encounters$Encounter_Type)
 
 #Fin_Class_C
 sum(is.na(encounters$Fin_Class_C))
-encounters$Fin_Class_C<-as.factor(encounters$Fin_Class_C)
 
 #Fin_Class
 sum(is.na(encounters$Fin_Class))
-encounters$Fin_Class<-as.factor(encounters$Fin_Class)
 
 #PCP_Prov_ID
 sum(is.na(encounters$PCP_Prov_ID))
 
 #PCP_Resource
 sum(is.na(encounters$PCP_Resource))
-encounters$PCP_Resource<-as.factor(encounters$PCP_Resource)
 
 #PCP_Prov_Service_C
 sum(is.na(encounters$PCP_Prov_Service_C))
-encounters$PCP_Prov_Service_C<-as.factor(encounters$PCP_Prov_Service_C)
 
 #PCP_Prov_Service
 sum(is.na(encounters$PCP_Prov_Service))
-encounters$PCP_Prov_Service<-as.factor(encounters$PCP_Prov_Service)
 
 #Enc_DT_DS
 sum(is.na(encounters$Enc_DT_DS))
@@ -90,45 +323,36 @@ sum(is.na(encounters$Appt_Checkin_DTTM))
 
 #Appt_Status_C
 sum(is.na(encounters$Appt_Status_C))
-encounters$Appt_Status_C<-as.factor(encounters$Appt_Status_C)
 
 #Appt_Status
 sum(is.na(encounters$Appt_Status))
-encounters$Appt_Status<-as.factor(encounters$Appt_Status)
 
 #Appt_Cancel_DTTM_DS
 sum(is.na(encounters$Appt_Cancel_DTTM_DS))
 
 #Appt_Primary_Loc_ID
 sum(is.na(encounters$Appt_Primary_Loc_ID))
-encounters$Appt_Primary_Loc_ID<-as.factor(encounters$Appt_Primary_Loc_ID)
 
 #Appt_Primary_Location
 sum(is.na(encounters$Appt_Primary_Location))
-encounters$Appt_Primary_Location<-as.factor(encounters$Appt_Primary_Location)
 
 #Appt_Dept_ID
 sum(is.na(encounters$Appt_Dept_ID))
-encounters$Appt_Dept_ID<-as.factor(encounters$Appt_Dept_ID)
 
 #Appt_Dept
 sum(is.na(encounters$Appt_Dept))
-encounters$Appt_Dept<-as.factor(encounters$Appt_Dept)
 
 #Appt_Prov_ID
 sum(is.na(encounters$Appt_Prov_ID))
 
 #Appt_Resource
 sum(is.na(encounters$Appt_Resource))
-encounters$Appt_Resource<-as.factor(encounters$Appt_Resource)
 
 #Appt_Prov_Service_C
 sum(is.na(encounters$Appt_Prov_Service_C))
-encounters$Appt_Prov_Service_C<-as.factor(encounters$Appt_Prov_Service_C)
 
 #Appt_Prov_Service
 sum(is.na(encounters$Appt_Prov_Service))
-encounters$Appt_Prov_Service<-as.factor(encounters$Appt_Prov_Service)
 
 #ED_Arrival_DTTM_DS
 sum(is.na(encounters$ED_Arrival_DTTM_DS))
@@ -159,76 +383,60 @@ sum(is.na(encounters$Means_of_Arrival))
 
 #Admit_Source_C
 sum(is.na(encounters$Admit_Source_C))
-encounters$Admit_Source_C<-as.factor(encounters$Admit_Source_C)
 
 #Admit_Source
 sum(is.na(encounters$Admit_Source))
-encounters$Admit_Source<-as.factor(encounters$Admit_Source)
 
 #First_Enc_Dept
 sum(is.na(encounters$First_Enc_Dept))
-encounters$First_Enc_Dept<-as.factor(encounters$First_Enc_Dept)
 
 #First_Enc_Service
 sum(is.na(encounters$First_Enc_Service))
-encounters$First_Enc_Service<-as.factor(encounters$First_Enc_Service)
 
 #First_Prov_ID
 sum(is.na(encounters$First_Prov_ID))
 
 #First_Resource
 sum(is.na(encounters$First_Resource))
-encounters$First_Resource<-as.factor(encounters$First_Resource)
 
 #First_Prov_Specialty_C
 sum(is.na(encounters$First_Prov_Specialty_C))
-encounters$First_Prov_Specialty_C<-as.factor(encounters$First_Prov_Specialty_C)
 
 #First_Prov_Specialty
 sum(is.na(encounters$First_Prov_Specialty))
-encounters$First_Prov_Specialty<-as.factor(encounters$First_Prov_Specialty)
 
 #Center_C
 sum(is.na(encounters$Center_C))
-encounters$Center_C<-as.factor(encounters$Center_C)
 
 #Center
 sum(is.na(encounters$Center))
-encounters$Center<-as.factor(encounters$Center)
 
 #Room
 sum(is.na(encounters$Room))
 
 #Last_Enc_Dept
 sum(is.na(encounters$Last_Enc_Dept))
-encounters$Last_Enc_Dept<-as.factor(encounters$Last_Enc_Dept)
 
 #Last_Enc_Service
 sum(is.na(encounters$Last_Enc_Service))
-encounters$Last_Enc_Service<-as.factor(encounters$Last_Enc_Service)
 
 #Last_Prov_ID
 sum(is.na(encounters$Last_Prov_ID))
 
 #Last_Resource
 sum(is.na(encounters$Last_Resource))
-encounters$Last_Resource<-as.factor(encounters$Last_Resource)
 
 #Last_Prov_Specialty_C
 sum(is.na(encounters$Last_Prov_Specialty_C))
-encounters$Last_Prov_Specialty_C<-as.factor(encounters$Last_Prov_Specialty_C)
 
 #Last_Prov_Specialty
 sum(is.na(encounters$Last_Prov_Specialty))
-encounters$Last_Prov_Specialty<-as.factor(encounters$Last_Prov_Specialty)
 
 #Disch_Dispo_C
 sum(is.na(encounters$Disch_Dispo_C))
-encounters$Disch_Dispo_C<-as.factor(encounters$Disch_Dispo_C)
 
 #Disch_Dispo
 sum(is.na(encounters$Disch_Dispo))
-encounters$Disch_Dispo<-as.factor(encounters$Disch_Dispo)
 
 #Pt_Encs
 sum(is.na(encounters$Pt_Encs))
@@ -239,15 +447,6 @@ sum(is.na(encounters$Service_Area_C))
 #Service_Area
 sum(is.na(encounters$Service_Area))
 
-####HH do type conversions for certain fields that need cleanup
-
-encounters$Zip_Code_DID<-as.factor(encounters$Zip_Code_DID) #is this conversion needed?
-encounters$PCP_Prov_ID<-as.character(encounters$PCP_Prov_ID,width=5) #is this conversion needed?
-
-#review cleaned data
-
-str(encounters)
-head(encounters)
 
 #export random sample of table - 1%
 ##encounter_sample_rows <- encounters[sample(nrow(encounters), nrow(encounters)*.01),]
@@ -257,12 +456,32 @@ head(encounters)
 
 ```{r}
 #############DIAGNOSIS ICD Table#############
-diagnosis_icd<-read_delim("Z:/RawData/TextFormat/Diagnosis_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)
-diagnosis_icd<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Diagnosis_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path
+
+###fix data types
+
+####Explore data
 
 str(diagnosis_icd)#8,536,894 obs. of  7 variables
 head(diagnosis_icd)
 dim(diagnosis_icd)
+
+
+#EXERCISE TO FIND ALL ICD CODES FOR HEPATITIS
+library(stringr)
+library(dplyr)
+library(sqldf)
+library(plyr)
+
+
+diagnosis_subset2<-diagnosis_icd %>%
+  filter(str_detect(icd_diagnosis, "HEP")) %>%
+  filter(str_detect(icd_diagnosis," C "))
+
+
+relevant_icd<-read_csv("Z:/HristinasFolder/ICDCodes.xlsx - Sheet2.csv")
+relevant_icd$icd_dx<-as.factor(relevant_icd$icd_dx)
+
+of_interest<-join(diagnosis_icd,relevant_icd,type="inner")
 
 
 
@@ -270,8 +489,10 @@ dim(diagnosis_icd)
 
 ```{r cars}
 ########CPT File##########
-cpt<-read_delim("Z:/RawData/TextFormat/CPT.txt", "|", escape_double = FALSE, trim_ws = TRUE)
-cpt <- read_delim("Z:/Hepatitis C Project/RawData/TextFormat/CPT.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+
+#### Fix field formats
+
+####Explore data
 
 str(cpt)
 head(cpt)
@@ -317,8 +538,11 @@ subset(cpt, CPT == "86038") #0
 
 ```{r}
 ##########Med_Rec_Adm File########
-med_rec_adm<-read_delim("Z:/RawData/TextFormat/Med_Rec_Adm.txt", "|", escape_double = FALSE, trim_ws = TRUE)
-med_rec_adm<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Med_Rec_Adm.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+
+#### Fix field formats
+
+
+####Explore data
 
 str(med_rec_adm)
 dim(med_rec_adm)
@@ -340,7 +564,6 @@ sum(is.na(med_rec_adm$PAT_ENC_CSN_ID_DID))
 #Billing type of encouter
 table(med_rec_adm$Enc_EIO)
 sum(is.na(med_rec_adm$Enc_EIO))
-med_rec_adm$Enc_EIO <- as.factor(med_rec_adm$Enc_EIO)
 
 #Encounter category type - integar
 table(med_rec_adm$ENC_TYPE_C) 
@@ -363,31 +586,26 @@ sum(is.na(med_rec_adm$Hsp_Disch_DTTM_DS))
 med_rec_adm$ADMIT_DEPT_ID
 dim(table(med_rec_adm$ADMIT_DEPT_ID))
 sum(is.na(med_rec_adm$ADMIT_DEPT_ID))
-med_rec_adm$ADMIT_DEPT_ID <- as.factor(med_rec_adm$ADMIT_DEPT_ID)
 
 #Location of med reconciliation - descricption
 med_rec_adm$ADMIT_DEPT
 table(med_rec_adm$ADMIT_DEPT) 
 sum(is.na(med_rec_adm$ADMIT_DEPT))
-med_rec_adm$ADMIT_DEPT <- as.factor(med_rec_adm$ADMIT_DEPT)
 
 #Code for service providering care for patient
 med_rec_adm$ADMIT_SERV_C
 table(med_rec_adm$ADMIT_SERV_C)
 sum(is.na(med_rec_adm$ADMIT_SERV_C))
-med_rec_adm$ADMIT_SERV_C <- as.factor(med_rec_adm$ADMIT_SERV_C)
 
 #Service providing care for patient - descirptive
 med_rec_adm$ADMIT_SERVICE_AREA
 dim(table(med_rec_adm$ADMIT_SERVICE_AREA))
 sum(is.na(med_rec_adm$ADMIT_SERVICE_AREA))
-med_rec_adm$ADMIT_SERVICE_AREA <- as.factor(med_rec_adm$ADMIT_SERVICE_AREA)
 
 #Code for medication confirmed with patient upon admission or discharge
 med_rec_adm$MED_REC_EVENT_C
 table(med_rec_adm$MED_REC_EVENT_C)
 sum(is.na(med_rec_adm$MED_REC_EVENT_C))
-med_rec_adm$MED_REC_EVENT_C <- as.factor(med_rec_adm$MED_REC_EVENT_C)
 
 #medication confirmed with patient upon admit or discharge - descriptive
 med_rec_adm$MED_REC_EVENT
@@ -425,13 +643,11 @@ sum(is.na(med_rec_adm$MED_REC_TYPE))
 med_rec_adm$MED_REC_ACTION_C
 table(med_rec_adm$MED_REC_ACTION_C)
 sum(is.na(med_rec_adm$MED_REC_ACTION_C))
-med_rec_adm$MED_REC_ACTION_C <- as.factor(med_rec_adm$MED_REC_ACTION_C)
 
 #Determined status of meds during reconciliation - descriptive
 med_rec_adm$MED_REC_ACTION
 table(med_rec_adm$MED_REC_ACTION)
 sum(is.na(med_rec_adm$MED_REC_ACTION))
-med_rec_adm$MED_REC_ACTION <- as.factor(med_rec_adm$MED_REC_ACTION)
    
 # "RSN_FOR_DISCON_C"   "RSN_FOR_DISCON_MED"
 med_rec_adm$RSN_FOR_DISCON_C
@@ -461,49 +677,42 @@ sum(is.na(med_rec_adm$ORDER_MED_DOSE))
 med_rec_adm$MED_ROUTE
 table(med_rec_adm$MED_ROUTE)
 sum(is.na(med_rec_adm$MED_ROUTE))
-med_rec_adm$MED_ROUTE <- as.factor(med_rec_adm$MED_ROUTE)
 
 #How often the med needs to be taken
 med_rec_adm$ORDER_MED_FREQ
 dim(table(med_rec_adm$ORDER_MED_FREQ))
 sum(is.na(med_rec_adm$ORDER_MED_FREQ))
-med_rec_adm$ORDER_MED_FREQ <- as.factor(med_rec_adm$ORDER_MED_FREQ)
 
 #Code for Therapeutic status
 med_rec_adm$THERA_CLASS_C
 dim(table(med_rec_adm$THERA_CLASS_C))
 sum(is.na(med_rec_adm$THERA_CLASS_C))
-med_rec_adm$THERA_CLASS_C <- as.factor(med_rec_adm$THERA_CLASS_C)
 
 #Descriptive for Therapeutic status
 med_rec_adm$THERA_CLASS
 dim(table(med_rec_adm$THERA_CLASS))
 sum(is.na(med_rec_adm$THERA_CLASS))
-med_rec_adm$THERA_CLASS_C <- as.factor(med_rec_adm$THERA_CLASS_C)
 
 #Code for Pharmaceutical class
 med_rec_adm$PHARM_CLASS_C
 dim(table(med_rec_adm$PHARM_CLASS_C))
 sum(is.na(med_rec_adm$PHARM_CLASS_C))
-med_rec_adm$PHARM_CLASS_C <- as.factor(med_rec_adm$PHARM_CLASS_C)
 
 #Descriptive for Pharmaceutical class
 med_rec_adm$PHARM_CLASS
 dim(table(med_rec_adm$PHARM_CLASS))
 sum(is.na(med_rec_adm$PHARM_CLASS))
-med_rec_adm$PHARM_CLASS <- as.factor(med_rec_adm$PHARM_CLASS)
+
 
 #Code for pharmaceutical sub class name
 med_rec_adm$PHARM_SUBCLASS_C
 dim(table(med_rec_adm$PHARM_SUBCLASS_C))
 sum(is.na(med_rec_adm$PHARM_SUBCLASS_C))
-med_rec_adm$PHARM_SUBCLASS_C <- as.factor(med_rec_adm$PHARM_SUBCLASS_C)
 
 #Descriptive for pharmaceutical sub class name
 med_rec_adm$PHARM_SUB_CLASS
 dim(table(med_rec_adm$PHARM_SUB_CLASS))
 sum(is.na(med_rec_adm$PHARM_SUB_CLASS))
-med_rec_adm$PHARM_SUB_CLASS <- as.factor(med_rec_adm$PHARM_SUB_CLASS)
 
 med_rec_adm$EVENT_MED_REC_LINE
 dim(table(med_rec_adm$EVENT_MED_REC_LINE))
@@ -523,9 +732,15 @@ dim(anti_viral_med_rec_adm)#1296
 
 ```{r}
 ##########Med_Rec_Dc File########
-med_rec_dc<-read_delim("Z:/RawData/TextFormat/Med_Rec_Dc.txt", "|", escape_double = FALSE, trim_ws = TRUE)
-med_rec_dc<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Med_Rec_Dc.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for data
 
+
+### Fix field types
+
+
+
+
+
+#### explore data
 str(med_rec_dc)
 head(med_rec_dc)
 names(med_rec_dc)
@@ -554,7 +769,6 @@ sum(is.na(med_rec_dc$ENC_TYPE))
 #Encounter Type
 table(med_rec_dc$Enc_eio)
 sum(is.na(med_rec_dc$Enc_eio))
-med_rec_dc$Enc_eio <- as.factor(med_rec_dc$Enc_eio)
 
 
 #hopital admission date and time for 
@@ -570,26 +784,22 @@ med_rec_dc$DC_DEPT_ID
 dim(table(med_rec_dc$DC_DEPT_ID))
 table(med_rec_dc$DC_DEPT_ID)
 sum(is.na(med_rec_dc$DC_DEPT_ID))
-med_rec_dc$DC_DEPT_ID <- as.factor(med_rec_dc$DC_DEPT_ID)
 
 #location of med reconciliation = descriptive
 med_rec_dc$DC_DEPT
 table(med_rec_dc$DC_DEPT) 
 sum(is.na(med_rec_dc$DC_DEPT))
-med_rec_dc$DC_DEPT <- as.factor(med_rec_dc$DC_DEPT)
 
 #service line providing care for patient
 med_rec_dc$DC_SERV_C
 table(med_rec_dc$DC_SERV_C)
 sum(is.na(med_rec_dc$DC_SERV_C))
-med_rec_dc$DC_SERV_C <- as.factor(med_rec_dc$DC_SERV_C)
 
 #service line providing care for patients - descriptive
 med_rec_dc$DC_SERVICE_AREA
 dim(table(med_rec_dc$DC_SERVICE_AREA))
 table(med_rec_dc$DC_SERVICE_AREA)
 sum(is.na(med_rec_dc$DC_SERVICE_AREA))
-med_rec_dc$DC_SERVICE_AREA <- as.factor(med_rec_dc$DC_SERVICE_AREA)
 
 #medication confirmed upon discharge - all same value
 med_rec_dc$ADT_DC_EVENT_C
@@ -605,13 +815,11 @@ sum(is.na(med_rec_dc$ADT_DC_EVENT))
 med_rec_dc$DC_DISP_C
 table(med_rec_dc$DC_DISP_C)
 sum(is.na(med_rec_dc$DC_DISP_C))
-med_rec_dc$DC_DISP_C <- as.factor(med_rec_dc$DC_DISP_C)
 
 #Disposition
 med_rec_dc$DC_DISPOSITION
 table(med_rec_dc$DC_DISPOSITION)
 sum(is.na(med_rec_dc$DC_DISPOSITION))
-med_rec_dc$DC_DISPOSITION <- as.factor(med_rec_dc$DC_DISPOSITION)
 
 #Med confirmed with patient upon discharge
 med_rec_dc$MED_REC_EVENT_C
@@ -627,7 +835,6 @@ sum(is.na(med_rec_dc$MED_REC_EVENT))
 med_rec_dc$MED_ORDERING_MODE
 table(med_rec_dc$MED_ORDERING_MODE)
 sum(is.na(med_rec_dc$MED_ORDERING_MODE))
-med_rec_dc$MED_ORDERING_MODE <- as.factor(med_rec_dc$MED_ORDERING_MODE)
 
 
 med_rec_dc$MED_ORDER_DTTM_DS
@@ -653,13 +860,11 @@ sum(is.na(med_rec_dc$MED_REC_TYPE))
 med_rec_dc$MED_REC_ACTION_C
 table(med_rec_dc$MED_REC_ACTION_C)
 sum(is.na(med_rec_dc$MED_REC_ACTION_C))
-med_rec_dc$MED_REC_ACTION_C <- as.factor(med_rec_dc$MED_REC_ACTION_C)
 
 #determined status of medication during reconciliation - desciptive
 med_rec_dc$MED_REC_ACTION
 table(med_rec_dc$MED_REC_ACTION)
 sum(is.na(med_rec_dc$MED_REC_ACTION))
-med_rec_dc$MED_REC_ACTION <- as.factor(med_rec_dc$MED_REC_ACTION)
    
 # "RSN_FOR_DISCON_C"   "RSN_FOR_DISCON_MED"
 med_rec_dc$RSN_FOR_DISCON_C
@@ -676,59 +881,52 @@ med_rec_dc$MEDICATION_ID
 table(med_rec_dc$MEDICATION_ID)
 dim(table(med_rec_dc$MEDICATION_ID))
 sum(is.na(med_rec_dc$MEDICATION_ID))
-med_rec_dc$MEDICATION_ID <- as.factor(med_rec_dc$MEDICATION_ID)
+
 
 #"MEDICATION" 
 med_rec_dc$MEDICATION
 table(med_rec_dc$MEDICATION)
 dim(table(med_rec_dc$MEDICATION))
 sum(is.na(med_rec_dc$MEDICATION))
-med_rec_dc$MEDICATION <- as.factor(med_rec_dc$MEDICATION)
+
 
 #dosage of meds
 med_rec_dc$ORDER_MED_DOSE
 length(unique(med_rec_dc$ORDER_MED_DOSE))
 sum(is.na(med_rec_dc$ORDER_MED_DOSE))
-med_rec_dc$ORDER_MED_DOSE <- as.factor(med_rec_dc$ORDER_MED_DOSE)
 
 #how the med was administered
 med_rec_dc$MED_ROUTE
 table(med_rec_dc$MED_ROUTE)
 dim(table(med_rec_dc$MED_ROUTE))
 sum(is.na(med_rec_dc$MED_ROUTE))
-med_rec_dc$MED_ROUTE <- as.factor(med_rec_dc$MED_ROUTE)
+
 
 #frequency of dosage
 med_rec_dc$ORDER_MED_FREQ
 dim(table(med_rec_dc$ORDER_MED_FREQ))
 sum(is.na(med_rec_dc$ORDER_MED_FREQ))
-med_rec_dc$ORDER_MED_FREQ <- as.factor(med_rec_dc$ORDER_MED_FREQ)
 
 
 med_rec_dc$THERA_CLASS_C
 dim(table(med_rec_dc$THERA_CLASS_C))
 sum(is.na(med_rec_dc$THERA_CLASS_C))
-med_rec_dc$THERA_CLASS_C <- as.factor(med_rec_dc$THERA_CLASS_C)
 
 med_rec_dc$PHARM_CLASS_C
 dim(table(med_rec_dc$PHARM_CLASS_C))
 sum(is.na(med_rec_dc$PHARM_CLASS_C))
-med_rec_dc$PHARM_CLASS_C <- as.factor(med_rec_dc$PHARM_CLASS_C)
 
 med_rec_dc$MED_PHARM_CLASS
 dim(table(med_rec_dc$MED_PHARM_CLASS))
 sum(is.na(med_rec_dc$MED_PHARM_CLASS))
-med_rec_dc$MED_PHARM_CLASS <- as.factor(med_rec_dc$MED_PHARM_CLASS)
 
 med_rec_dc$PHARM_SUBCLASS_C
 dim(table(med_rec_dc$PHARM_SUBCLASS_C))
 sum(is.na(med_rec_dc$PHARM_SUBCLASS_C))
-med_rec_dc$PHARM_SUBCLASS_C <- as.factor(med_rec_dc$PHARM_SUBCLASS_C)
 
 med_rec_dc$PHARM_SUB_CLASS
 dim(table(med_rec_dc$PHARM_SUB_CLASS))
 sum(is.na(med_rec_dc$PHARM_SUB_CLASS))
-med_rec_dc$PHARM_SUB_CLASS <- as.factor(med_rec_dc$PHARM_SUB_CLASS)
 
 med_rec_dc$EVENT_MED_REC_LINE
 dim(table(med_rec_dc$EVENT_MED_REC_LINE))
@@ -740,8 +938,11 @@ sum(is.na(med_rec_dc$EVENT_MED_REC_LINE))
 
 ```{r}
 ##########Meds_Inpt File########
-meds_inpt <- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Meds_Inpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Laura's path for new data files
-meds_inpt<- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Meds_Inpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
+
+
+### Fix field types
+
+
 
 str(meds_inpt)
 head(meds_inpt)
@@ -766,61 +967,48 @@ sum(is.na(meds_inpt$HSP_Disch_DTTM_DS))
 
 #Med_Dept
 sum(is.na(meds_inpt$Med_Dept))
-meds_inpt$Med_Dept <- as.factor(meds_inpt$Med_Dept)
 
 #Order_DT_DS
 sum(is.na(meds_inpt$Order_DT_DS))
 
 #Thera_class_c
 sum(is.na(meds_inpt$Thera_class_c))
-meds_inpt$Thera_class_c <- as.factor(meds_inpt$Thera_class_c)
 
 #Thera_class
 sum(is.na(meds_inpt$Thera_class))
-meds_inpt$Thera_class <- as.factor(meds_inpt$Thera_class)
 
 #Pharm_class_c
 sum(is.na(meds_inpt$Pharm_class_c))
-meds_inpt$Pharm_class_c <- as.factor(meds_inpt$Pharm_class_c)
 
 #Pharm_class
 sum(is.na(meds_inpt$Pharm_class))
-meds_inpt$Pharm_class <- as.factor(meds_inpt$Pharm_class)
 
 #Pharm_subclass_c
 sum(is.na(meds_inpt$Pharm_subclass_c))
-meds_inpt$Pharm_subclass_c <- as.factor(meds_inpt$Pharm_subclass_c)
 
 #Pharm_subclass
 sum(is.na(meds_inpt$Pharm_subclass))
-meds_inpt$Pharm_subclass <- as.factor(meds_inpt$Pharm_subclass)
 
 #Medication_id
 sum(is.na(meds_inpt$Medication_id))
-meds_inpt$Medication_id <- as.character(meds_inpt$Medication_id)
 
 #Medication_id
 sum(is.na(meds_inpt$Medication))
-meds_inpt$Medication <- as.character(meds_inpt$Medication)
 
 #GPI
 sum(is.na(meds_inpt$GPI))
 
 #Generic_name
 sum(is.na(meds_inpt$Generic_name))
-meds_inpt$Generic_name <- as.factor(meds_inpt$Generic_name)
 
 #Order_Med_Dose
 sum(is.na(meds_inpt$Order_Med_Dose))
-meds_inpt$Order_Med_Dose <- as.factor(meds_inpt$Order_Med_Dose)
 
 #Med_Route
 sum(is.na(meds_inpt$Med_Route))
-meds_inpt$Med_Route <- as.factor(meds_inpt$Med_Route)
 
 #Order_Med_Freq
 sum(is.na(meds_inpt$Order_Med_Freq))
-meds_inpt$Order_Med_Freq <- as.factor(meds_inpt$Order_Med_Freq)
 
 #Order_Start_DTTM_DS
 sum(is.na(meds_inpt$Order_Start_DTTM_DS))
@@ -830,7 +1018,6 @@ sum(is.na(meds_inpt$Order_End_DTTM_DS))
 
 #MAR_Dose
 sum(is.na(meds_inpt$MAR_Dose))
-meds_inpt$MAR_Dose <- as.factor(meds_inpt$MAR_Dose)
 
 #MAR_Gave_DTTM_DS
 sum(is.na(meds_inpt$MED_Gave_DTTM_DS))
@@ -840,11 +1027,9 @@ sum(is.na(meds_inpt$MED_Sched_DTTM_DS))
 
 #MAR_Action
 sum(is.na(meds_inpt$MAR_Action))
-meds_inpt$MAR_Action <- as.factor(meds_inpt$MAR_Action)
 
 #Ordering_Mode
 sum(is.na(meds_inpt$Ordering_Mode))
-meds_inpt$Ordering_Mode <- as.factor(meds_inpt$Ordering_Mode)
 
 #Check cleaned data
 str(meds_inpt)
@@ -855,9 +1040,6 @@ str(meds_inpt)
 
 ```{r}
 ##########Meds_Outpt File########
-
-meds_outpt<-read_delim("Z:/RawData/TextFormat/Meds_Outpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)
-meds_outpt<- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Meds_Outpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
 
 str(meds_outpt)
 head(meds_outpt)
@@ -959,7 +1141,6 @@ meds_outpt$Ordering_Mode <- as.factor(meds_outpt$Ordering_Mode)
 
 ```{r}
 ##########Procedure_ICD File########
-procedure_icd<-read_delim("Z:/RawData/TextFormat/Procedure_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
 str(procedure_icd)
 head(procedure_icd)
@@ -970,9 +1151,6 @@ dim(procedure_icd)
 
 ```{r}
 ##########Social_Hx File########
-social_hx<-read_delim("Z:/RawData/TextFormat/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)
-social_hx<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path
-social_hx<-read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path for new file
 str(social_hx)
 head(social_hx)
 dim(social_hx)
@@ -1337,7 +1515,6 @@ sum(is.na(demo$DOD_DS))
 
 ```{r}
 ##############Education###############
-education<-read_delim("Z:/Hepatitis C Project/RAW NEW 3.28.2017/EDUCATION_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path for new demo table
 
 str(education)
 dim(education)
@@ -1347,7 +1524,6 @@ dim(education)
 ```{r}
 ##############Labs###############
 
-labs <- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Labs.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
 
 head(labs)
 str(labs)
