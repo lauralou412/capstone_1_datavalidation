@@ -45,11 +45,40 @@ social_hx<-read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Social_Hx.txt", "|", esca
 relevant_icd<-read_csv("Z:/HristinasFolder/ICDCodes.xlsx - Sheet2.csv")
 
 education<-read_delim("Z:/RAW NEW 3.28.2017/EDUCATION_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path for new demo table
+dim(education)
 
 labs <- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Labs.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
 
 ```
 
+```{r}
+#Reduce full datatset to 1% sample size
+
+set.seed(1)
+
+encounters <- encounters[sample(nrow(encounters), .1 * nrow(encounters)),]
+dim(education)
+
+diagnosis_icd <- diagnosis_icd[sample(nrow(diagnosis_icd), .1 * nrow(diagnosis_icd)),]
+
+cpt <- cpt[sample(nrow(cpt), .1 * nrow(cpt)),]
+
+med_rec_adm <- med_rec_adm[sample(nrow(med_rec_adm), .1 * nrow(med_rec_adm)),]
+
+med_rec_dc <- med_rec_dc[sample(nrow(med_rec_dc), .1 * nrow(med_rec_dc)),]
+
+meds_inpt <- meds_inpt[sample(nrow(meds_inpt), .1 * nrow(meds_inpt)),]
+
+meds_outpt <- meds_outpt[sample(nrow(meds_outpt), .1 * nrow(meds_outpt)),]
+
+procedure_icd <- procedure_icd[sample(nrow(procedure_icd), .1 * nrow(procedure_icd)),]
+
+social_hx <- social_hx[sample(nrow(social_hx), .1 * nrow(social_hx)),]
+  
+education <- education[sample(nrow(education), .1 * nrow(education)),]
+
+labs <- labs[sample(nrow(labs), .1 * nrow(labs)),]
+```
 
 ```{r}
 ## TRANSFORM CHARACTER FORMATS
@@ -1623,147 +1652,3 @@ demo$DOD_DS
 sum(is.na(demo$DOD_DS))
 
 
-```
-
-```{r}
-##############Education###############
-
-str(education)
-dim(education)
-
-```
-
-```{r}
-##############Labs###############
-
-
-head(labs)
-str(labs)
-dim(labs)
-
-```
-
-```{r}
-###################Unique Patient ID Dataset - Analyzing what we have on patients############
-patient_ID_encounters <- as.data.frame(table(encounters$Patient_ID))
-colnames(patient_ID_encounters) <- c("Patient_ID", "Count_Encounters")
-
-patient_ID_diagnosis_icd <- as.data.frame(table(diagnosis_icd$patient_id))
-colnames(patient_ID_diagnosis_icd) <- c("Patient_ID", "Count_Diagnosis_ICD")
-
-merge_1 <- merge(patient_ID_encounters, patient_ID_diagnosis_icd, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
-sum(is.na(merge_1))
-
-patient_ID_cpt <- as.data.frame(table(cpt$patient_id))
-colnames(patient_ID_cpt) <- c("Patient_ID", "Count_CPT")
-
-merge_2 <- merge(merge_1, patient_ID_cpt, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
-
-patient_ID_med_rec_adm <- as.data.frame(table(med_rec_adm$PATIENT_ID))
-colnames(patient_ID_med_rec_adm) <- c("Patient_ID", "Count_Med_Rec_ADM")
-
-merge_3 <- merge(merge_2, patient_ID_med_rec_adm, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
-
-patient_ID_med_rec_dc <- as.data.frame(table(med_rec_dc$PATIENT_ID))
-colnames(patient_ID_med_rec_dc) <- c("Patient_ID", "Count_Med_Rec_DC")
-
-merge_4 <- merge(merge_3, patient_ID_med_rec_dc, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
-
-patient_ID_meds_inpt <- as.data.frame(table(meds_inpt$Patient_ID))
-colnames(patient_ID_meds_inpt) <- c("Patient_ID", "Count_Meds_Inpt")
-
-merge_5 <- merge(merge_4, patient_ID_meds_inpt, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
-
-patient_ID_meds_outpt <- as.data.frame(table(meds_outpt$Patient_ID))
-colnames(patient_ID_meds_outpt) <- c("Patient_ID", "Count_Meds_Outpt")
-
-merge_6 <- merge(merge_5, patient_ID_meds_outpt, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
-
-patient_ID_procedure_icd <- as.data.frame(table(procedure_icd$patient_id))
-colnames(patient_ID_procedure_icd) <- c("Patient_ID", "Count_Procedure_ICD")
-
-merge_7 <- merge(merge_6, patient_ID_procedure_icd, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
-
-patient_ID_social <- as.data.frame(table(social_hx$Patient_ID))
-colnames(patient_ID_social) <- c("Patient_ID", "Count_Social")
-
-merge_8 <- merge(merge_7, patient_ID_social, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
-
-patient_ID_demo <- as.data.frame(table(demo$PATIENT_ID))
-colnames(patient_ID_demo) <- c("Patient_ID", "Count_Demo")
-
-merge_9 <- merge(merge_8, patient_ID_demo, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
-
-patient_ID_labs <- as.data.frame(table(labs$patient_id))
-colnames(patient_ID_labs) <- c("Patient_ID", "Count_labs")
-
-merge_10 <- merge(merge_9, patient_ID_labs, by = "Patient_ID", all.x = TRUE, all.y = TRUE)
-
-write.csv(merge_10, "Z:/Hepatitis C Project/patient_ID_freq.csv")
-
-#Filter out patients with a Hep C icd diagnosis
-#import hep c patient ID listing
-unique_hep_c_patient_ids<-read.csv("Z:/Hepatitis C Project/unique_hep_c_patient_ids.csv", header = TRUE)#Cindy's data path
-str(unique_hep_c_patient_ids)
-
-#filter merge_10 so only hep C patients are shown
-unique_hep_c_patients_freq <- subset(merge_10, Patient_ID %in% unique_hep_c_patient_ids$PATIENT_ID) 
-
-#Export to csv
-write.csv(unique_hep_c_patients_freq, "Z:/Hepatitis C Project/unique_hep_c_patients_freq.csv")
-```
-
-```{r}
-###################Unique Encounter ID Dataset - Analyzing what we have on encoutners############
-encounter_ID_encounters <- as.data.frame(table(encounters$Encounter_ID))
-colnames(encounter_ID_encounters) <- c("Encounter_ID", "Count_Encounters")
-
-encounter_ID_diagnosis_icd <- as.data.frame(table(diagnosis_icd$encounter_id))
-colnames(encounter_ID_diagnosis_icd) <- c("Encounter_ID", "Count_Diagnosis_ICD")
-
-merge_1.2 <- merge(encounter_ID_encounters, encounter_ID_diagnosis_icd, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
-
-encounter_ID_cpt <- as.data.frame(table(cpt$encounter_id))
-colnames(encounter_ID_cpt) <- c("Encounter_ID", "Count_CPT")
-
-merge_2.2 <- merge(merge_1.2, encounter_ID_cpt, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
-
-encounter_ID_med_rec_adm <- as.data.frame(table(med_rec_adm$ENCOUNTER_ID))
-colnames(encounter_ID_med_rec_adm) <- c("Encounter_ID", "Count_Med_Rec_ADM")
-
-merge_3.2 <- merge(merge_2.2, encounter_ID_med_rec_adm, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
-
-encounter_ID_med_rec_dc <- as.data.frame(table(med_rec_dc$ENCOUNTER_ID))
-colnames(encounter_ID_med_rec_dc) <- c("Encounter_ID", "Count_Med_Rec_DC")
-
-merge_4.2 <- merge(merge_3.2, encounter_ID_med_rec_dc, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
-
-encounter_ID_meds_inpt <- as.data.frame(table(meds_inpt$Encounter_ID))
-colnames(encounter_ID_meds_inpt) <- c("Encounter_ID", "Count_Meds_Inpt")
-
-merge_5.2 <- merge(merge_4.2, encounter_ID_meds_inpt, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
-
-encounter_ID_meds_outpt <- as.data.frame(table(meds_outpt$Encounter_ID))
-colnames(encounter_ID_meds_outpt) <- c("Encounter_ID", "Count_Meds_Outpt")
-
-merge_6.2 <- merge(merge_5.2, encounter_ID_meds_outpt, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
-
-encounter_ID_procedure_icd <- as.data.frame(table(procedure_icd$encounter_id))
-colnames(encounter_ID_procedure_icd) <- c("Encounter_ID", "Count_Procedure_ICD")
-
-merge_7.2 <- merge(merge_6.2, encounter_ID_procedure_icd, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
-
-encounter_ID_social <- as.data.frame(table(social_hx$Encounter_ID))
-colnames(encounter_ID_social) <- c("Encounter_ID", "Count_Social")
-
-merge_8.2 <- merge(merge_7.2, encounter_ID_social, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
-
-#encounter_ID_labs <- as.data.frame(table(labs$encounter_id))
-#colnames(encounter_ID_labs) <- c("Encounter_ID", "Count_labs")
-#################Getting error - "Error: cannot allocate vector of size 512.0 Mb"
-#merge_9.2 <- merge(merge_8.2, encounter_ID_demo, by = "Encounter_ID", all.x = TRUE, all.y = TRUE)
-
-write.csv(merge_8.2, "Z:/Hepatitis C Project/encounter_ID_freq.csv")
-
-#laura
-```
