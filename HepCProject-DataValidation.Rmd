@@ -27,36 +27,26 @@ library(readr)
 encounters <- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Enc.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy & Laura's path for new data files
 
 diagnosis_icd<-read_delim("Z:/RawData/TextFormat/Diagnosis_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)
-diagnosis_icd<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Diagnosis_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path
 
 cpt<-read_delim("Z:/RawData/TextFormat/CPT.txt", "|", escape_double = FALSE, trim_ws = TRUE)
-cpt <- read_delim("Z:/Hepatitis C Project/RawData/TextFormat/CPT.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
 med_rec_adm<-read_delim("Z:/RawData/TextFormat/Med_Rec_Adm.txt", "|", escape_double = FALSE, trim_ws = TRUE)
-med_rec_adm<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Med_Rec_Adm.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
 med_rec_dc<-read_delim("Z:/RawData/TextFormat/Med_Rec_Dc.txt", "|", escape_double = FALSE, trim_ws = TRUE)
-med_rec_dc<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Med_Rec_Dc.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for data
 
-meds_inpt <- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Meds_Inpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Hristina's path for new data files
-meds_inpt<- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Meds_Inpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
+meds_inpt<- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Meds_Inpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
 
-
-meds_outpt<-read_delim("Z:/RawData/TextFormat/Meds_Outpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)
-meds_outpt<- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Meds_Outpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
+meds_outpt<- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Meds_Outpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
 
 procedure_icd<-read_delim("Z:/RawData/TextFormat/Procedure_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
-social_hx<-read_delim("Z:/RawData/TextFormat/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)
-social_hx<-read_delim("Z:/Hepatitis C Project/RawData/TextFormat/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path
-social_hx<-read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path for new file
+social_hx<-read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path for new file
 
 relevant_icd<-read_csv("Z:/HristinasFolder/ICDCodes.xlsx - Sheet2.csv")
 
-education<-read_delim("Z:/Hepatitis C Project/RAW NEW 3.28.2017/EDUCATION_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path for new demo table
+education<-read_delim("Z:/RAW NEW 3.28.2017/EDUCATION_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path for new demo table
 
-labs <- read_delim("Z:/Hepatitis C Project/RAW NEW 3.10.2017/2017 03 10/Labs.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
-
+labs <- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Labs.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
 
 ```
 
@@ -141,7 +131,6 @@ cpt$CPT<-as.factor(cpt$CPT)
 cpt$CPT_Procedure<-as.factor(cpt$CPT_Procedure)
 cpt$QUANTITY<-as.integer(cpt$QUANTITY)
 cpt$procedure_dt_ds<-as.Date.POSIXct(cpt$procedure_dt_ds)
-
 
 
 med_rec_adm$PATIENT_ID <- as.character(med_rec_adm$PATIENT_ID)
@@ -254,6 +243,131 @@ meds_inpt$Order_End_DTTM_DS <- as.date.POSIXct(meds_inpt$Order_End_DTTM_DS)
 meds_inpt$MAR_Action <- as.factor(meds_inpt$MAR_Action)
 meds_inpt$Ordering_Mode <- as.factor(meds_inpt$Ordering_Mode)
 
+
+
+meds_outpt$Patient_ID <- as.character(meds_outpt$Patient_ID)
+meds_outpt$Encounter_ID <- as.character(meds_outpt$Encounter_ID)
+meds_outpt$Pat_Enc_Csn_ID_DID <- as.character(meds_outpt$Pat_Enc_Csn_ID_DID)
+meds_outpt$Enc_DT_DS <- as.date.POSIXct(meds_outpt$Enc_DT_DS)
+meds_outpt$Med_Dept <- as.factor(meds_outpt$Med_Dept)
+meds_outpt$Order_DT_DS <- as.date.POSIXct(meds_outpt$Order_DT_DS)
+meds_outpt$Thera_class_c <- as.factor(meds_outpt$Thera_class_c)
+meds_outpt$Thera_class <- as.factor(meds_outpt$Thera_class)
+meds_outpt$Pharm_class_c <- as.factor(meds_outpt$Pharm_class_c)
+meds_outpt$Pharm_class <- as.factor(meds_outpt$Pharm_class)
+meds_outpt$Pharm_subclass_c <- as.factor(meds_outpt$Pharm_subclass_c)
+meds_outpt$Pharm_subclass <- as.factor(meds_outpt$Pharm_subclass)
+meds_outpt$Medication_id <- as.factor(meds_outpt$Medication_id)
+meds_outpt$Medication <- as.factor(meds_outpt$Medication)
+meds_outpt$GPI <- as.factor(meds_outpt$GPI)
+meds_outpt$Generic_name <- as.factor(meds_outpt$Generic_name)
+meds_outpt$SIG <- as.factor(meds_outpt$SIG)
+meds_outpt$QUANTITY <- as.factor(meds_outpt$QUANTITY)
+meds_outpt$REFILLS <- as.integer(meds_outpt$REFILLS)
+meds_outpt$Order_Med_Dose <- as.factor(meds_outpt$Order_Med_Dose)
+meds_outpt$Med_Route <- as.factor(meds_outpt$Med_Route)
+meds_outpt$Order_Med_Freq <- as.factor(meds_outpt$Order_Med_Freq)
+meds_outpt$Order_Start_DTTM_DS <- as.date.POSIXct(meds_outpt$Order_Start_DTTM_DS)
+meds_outpt$Order_End_DTTM_DS <- as.date.POSIXct(meds_outpt$Order_End_DTTM_DS)
+meds_outpt$Ordering_Mode <- as.factor(meds_outpt$Ordering_Mode)
+
+
+
+procedure_icd$patient_id<-as.character(procedure_icd$patient_id)
+procedure_icd$encounter_id<-as.character(procedure_icd$encounter_id)
+procedure_icd$enc_dt_ds<-as.Date.POSIXct(procedure_icd$enc_dt_ds)
+procedure_icd$icd_px<-as.factor(procedure_icd$icd_px)
+procedure_icd$icd_procedure<-as.factor(procedure_icd$icd_procedure)
+#procedure_icd$procedure_dt_ds<as.Date.default(procedure_icd$procedure_dt_ds)
+procedure_icd$proc_rank<-as.factor(procedure_icd$proc_rank)
+procedure_icd$ICD_TYPE<-as.factor(procedure_icd$ICD_TYPE)
+
+
+
+social_hx$Patient_ID<-social_hx$Patient_ID
+social_hx$Encounter_ID<-social_hx$Encounter_ID
+social_hx$Pat_Enc_Csn_ID_DID<-social_hx$Pat_Enc_Csn_ID_DID
+social_hx$Enc_DT_DS<-social_hx$Enc_DT_DS
+social_hx$Hx_SOURCE_C<-social_hx$Hx_SOURCE_C
+social_hx$Hx_SOURCE<-social_hx$Hx_SOURCE
+social_hx$TOBACCO_USER_C<-social_hx$TOBACCO_USER_C
+social_hx$TOBACCO_USER<-social_hx$TOBACCO_USER
+social_hx$SMOKING_TOB_USE_C<-social_hx$SMOKING_TOB_USE_C
+social_hx$SMOKING_TOB_USE<-social_hx$SMOKING_TOB_USE
+social_hx$TOBACCO_PAK_PER_DY<-social_hx$TOBACCO_PAK_PER_DY
+social_hx$TOBACCO_USED_YEARS<-social_hx$TOBACCO_USED_YEARS
+social_hx$TOBACCO_COMMENT<-social_hx$TOBACCO_COMMENT
+social_hx$SMOKING_START_DATE_DS<-social_hx$SMOKING_START_DATE_DS
+social_hx$SMOKING_QUIT_DATE_DS<-social_hx$SMOKING_QUIT_DATE_DS
+social_hx$CIGARETTES_YN<-social_hx$CIGARETTES_YN
+social_hx$PIPES_YN<-social_hx$PIPES_YN
+social_hx$CIGARS_YN<-social_hx$CIGARS_YN
+social_hx$SMOKELESS_TOB_USE_C<-social_hx$SMOKELESS_TOB_USE_C
+social_hx$SMOKELESS_TOB_USE<-social_hx$SMOKELESS_TOB_USE
+social_hx$SNUFF_YN<-social_hx$SNUFF_YN<
+social_hx$CHEW_YN<-social_hx$CHEW_YN
+social_hx$SMOKELESS_QUIT_DATE_DS<-social_hx$SMOKELESS_QUIT_DATE_DS
+social_hx$ALCOHOL_USE_C<-social_hx$ALCOHOL_USE_
+social_hx$ALCOHOL_USE<-social_hx$ALCOHOL_USE
+social_hx$HX_DRINK_TYPES_C<-social_hx$HX_DRINK_TYPES_C
+social_hx$HX_DRINK_TYPES<-social_hx$HX_DRINK_TYPES
+social_hx$ALCOHOL_DRINKS_WK<-social_hx$ALCOHOL_DRINKS_WK
+social_hx$ALCOHOL_OZ_PER_WK<-social_hx$ALCOHOL_OZ_PER_WK
+social_hx$ALCOHOL_COMMENT<-social_hx$ALCOHOL_COMMENT
+social_hx$ILL_DRUG_USER_C<-social_hx$ILL_DRUG_USER_C
+social_hx$ILL_DRUG_USER<-social_hx$ILL_DRUG_USER
+social_hx$IV_DRUG_USER_YN<-social_hx$IV_DRUG_USER_YN
+social_hx$ILLICIT_DRUG_FREQ<-social_hx$ILLICIT_DRUG_FREQ
+social_hx$ILLICIT_DRUG_CMT<-social_hx$ILLICIT_DRUG_CMT
+social_hx$SEXUALLY_ACTIVE_C<-social_hx$SEXUALLY_ACTIVE_C
+social_hx$SEXUALLY_ACTIVE<-social_hx$SEXUALLY_ACTIVE
+social_hx$FEMALE_PARTNER_YN<-social_hx$FEMALE_PARTNER_YN
+social_hx$MALE_PARTNER_YN<-social_hx$MALE_PARTNER_YN<
+social_hx$CONDOM_YN<-social_hx$CONDOM_YN
+social_hx$PILL_YN<-social_hx$PILL_YN
+social_hx$DIAPHRAGM_YN<-social_hx$DIAPHRAGM_YN
+social_hx$IUD_YN<-social_hx$IUD_YN
+social_hx$SURGICAL_YN<-social_hx$SURGICAL_YN
+social_hx$SPERMICIDE_YN<-social_hx$SPERMICIDE_YN<
+social_hx$IMPLANT_YN<-social_hx$IMPLANT_YN
+social_hx$RHYTHM_YN<-social_hx$RHYTHM_YN
+social_hx$INJECTION_YN<-social_hx$INJECTION_YN
+social_hx$SPONGE_YN<-social_hx$SPONGE_YN
+social_hx$INSERTS_YN<-social_hx$INSERTS_YN
+social_hx$ABSTINENCE_YN<-social_hx$ABSTINENCE_YN
+social_hx$SEX_COMMENT<-social_hx$SEX_COMMENT
+social_hx$UNKNOWN_FAM_HX_YN<-social_hx$UNKNOWN_FAM_HX_YN<
+social_hx$OCCUPATION_C<-social_hx$OCCUPATION_C
+social_hx$OCCUPATION<-social_hx$OCCUPATION
+social_hx$EMPY_STATUS_C<-social_hx$EMPY_STATUS_C
+social_hx$EMPLOYMENT_STATUS<-social_hx$EMPLOYMENT_STATUS
+social_hx$Response_Count<-social_hx$Response_Count
+  
+
+education$PATIENT_ID<-as.character(education$PATIENT_ID)
+education$YEARS_EDUCATION<-as.integer(education$YEARS_EDUCATION)
+
+
+labs$patient_id<-as.character(labs$patient_id)
+labs$encounter_id<-as.character(labs$encounter_id)
+labs$pat_enc_csn_id_did<-as.character(labs$pat_enc_csn_id_did)
+labs$enc_dt_ds<-
+labs$enc_dt_ds
+labs$order_dttm_ds
+labs$result_dttm_ds
+labs$proc_code
+labs$proc_description
+labs$component_id
+labs$component
+labs$order_value
+labs$line
+labs$line_comment
+labs$reference_unit
+labs$result_in_range_yn
+labs$result_flag
+
+###update field names to caps
+### see if we need to pad decimal ICD and CPT
 
 ```
 
@@ -482,8 +596,6 @@ relevant_icd<-read_csv("Z:/HristinasFolder/ICDCodes.xlsx - Sheet2.csv")
 relevant_icd$icd_dx<-as.factor(relevant_icd$icd_dx)
 
 of_interest<-join(diagnosis_icd,relevant_icd,type="inner")
-
-
 
 ```
 
