@@ -22,7 +22,7 @@ library(readr)
 ```{r}
 ##########Encounters File########
 #Import new table revized 3/10,full file
-encounters <- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Enc.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy & Laura's path for new data files
+encounters <- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Enc.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
 diagnosis_icd<-read_delim("Z:/RawData/TextFormat/Diagnosis_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
@@ -32,21 +32,23 @@ med_rec_adm<-read_delim("Z:/RawData/TextFormat/Med_Rec_Adm.txt", "|", escape_dou
 
 med_rec_dc<-read_delim("Z:/RawData/TextFormat/Med_Rec_Dc.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
-meds_inpt<- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Meds_Inpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
+meds_inpt<- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Meds_Inpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
-meds_outpt<- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Meds_Outpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
+meds_outpt<- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Meds_Outpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
 procedure_icd<-read_delim("Z:/RawData/TextFormat/Procedure_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
-social_hx<-read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path for new file
+social_hx<-read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Social_Hx.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
-relevant_icd<-read_csv("Z:/HristinasFolder/ICDCodes.xlsx - Sheet2.csv")
-## this is the Excel file with the Hep C relevant ICD codes - to be able to join on this table later
-
-education<-read_delim("Z:/RAW NEW 3.28.2017/EDUCATION_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's data path for new demo table
-dim(education)
+education<-read_delim("Z:/RAW NEW 3.28.2017/EDUCATION_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
 labs <- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Labs.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
+
+demo<-read_delim("Z:/RAW NEW 3.28.2017/DEMO_no_ED_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+
+demo<-read_delim("Z:/RAW NEW 3.28.2017/DEMO_no_ED_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+
+cpt_ucpg<-read_delim("Z:/RAW NEW 3.28.2017/UCPG_CPT_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
 ```
 
@@ -77,6 +79,11 @@ social_hx <- social_hx[sample(nrow(social_hx), .1 * nrow(social_hx)),]
 education <- education[sample(nrow(education), .1 * nrow(education)),]
 
 labs <- labs[sample(nrow(labs), .1 * nrow(labs)),]
+
+demo<-demo[sample(nrow(demo),.1*nrow(demo)),]
+
+cpt_ucpg<-cpt_ucpg[sample(nrow(cpt_ucpg),.1*nrow(cpt_ucpg)),]
+
 ```
 
 ## TRANSFORM DATA FORMATS
@@ -447,6 +454,21 @@ labs$reference_unit<-as.factor(labs$reference_unit)
 labs$result_in_range_yn<-as.factor(labs$result_in_range_yn)
 labs$result_flag<-as.factor(labs$result_flag)
 
-### see if we need to pad decimal ICD and CPT
+
+demo$PATIENT_ID<-as.character(demo$PATIENT_ID)
+demo$DOB_DS<-as.Date.POSIXct(demo$DOB_DS)
+demo$Gender<-as.factor(demo$Gender)
+demo$Flag_Gender<-as.factor(demo$Flag_Gender)
+demo$Race_Code<-as.factor(demo$Race_Code)
+demo$Race<-as.factor(demo$Race)
+demo$Ethnic_Code<-as.factor(demo$Ethnic_Code)
+demo$Ethnicity<-as.factor(demo$Ethnicity)
+demo$Language_Code<-as.factor(demo$Language_Code)
+demo$language<-as.factor(demo$language)
+demo$Marital_Status_Code<-as.factor(demo$Marital_Status_Code)
+demo$Marital_Status<-as.factor(demo$Marital_Status)
+demo$DOD_DS<-as.Date.POSIXct(demo$DOD_DS)
+
+
 
 ```
