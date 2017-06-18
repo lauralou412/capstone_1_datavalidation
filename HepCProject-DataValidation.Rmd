@@ -42,9 +42,7 @@ social_hx<-read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Social_Hx.txt", "|", esca
 
 education<-read_delim("Z:/RAW NEW 3.28.2017/EDUCATION_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
-labs <- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Labs.txt", "|", escape_double = FALSE, trim_ws = TRUE)#Cindy's path for new data files
-
-demo<-read_delim("Z:/RAW NEW 3.28.2017/DEMO_no_ED_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+labs <- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Labs.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
 demo<-read_delim("Z:/RAW NEW 3.28.2017/DEMO_no_ED_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
@@ -428,6 +426,7 @@ social_hx$Response_Count<-as.integer(social_hx$Response_Count)
   
 
 education$PATIENT_ID<-as.character(education$PATIENT_ID)
+education$PATIENT_ID<-str_pad(education$PATIENT_ID, 10, pad = "0")
 education$YEARS_EDUCATION<-as.integer(education$YEARS_EDUCATION)
 
 
@@ -456,6 +455,7 @@ labs$result_flag<-as.factor(labs$result_flag)
 
 
 demo$PATIENT_ID<-as.character(demo$PATIENT_ID)
+demo$PATIENT_ID<-str_pad(demo$PATIENT_ID, 10, pad = "0")
 demo$DOB_DS<-as.Date.POSIXct(demo$DOB_DS)
 demo$Gender<-as.factor(demo$Gender)
 demo$Flag_Gender<-as.factor(demo$Flag_Gender)
