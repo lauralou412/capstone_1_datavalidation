@@ -14,6 +14,8 @@ knitr::opts_chunk$set(echo = TRUE)
 #
 setwd("Z:/RawData/TextFormat")
 library(readr)
+library(stringr)
+
 ```
 
 
@@ -88,7 +90,6 @@ cpt_ucpg<-cpt_ucpg[sample(nrow(cpt_ucpg),.1*nrow(cpt_ucpg)),]
 
 ```{r}
 
-library(stringr)
 
 encounters$Patient_ID<-as.character(encounters$Patient_ID) 
 names(encounters)[1]<-paste("PATIENT_ID")
@@ -472,3 +473,33 @@ demo$DOD_DS<-as.Date.POSIXct(demo$DOD_DS)
 
 
 ```
+
+
+```{r}
+## INDEX TABLES
+encounters<-encounters[order(encounters$PATIENT_ID,encounters$ENCOUNTER_ID),]
+
+diagnosis_icd<-diagnosis_icd[order(diagnosis_icd$PATIENT_ID,diagnosis_icd$ENCOUNTER_ID),]
+
+cpt<-cpt[order(cpt$PATIENT_ID,cpt$ENCOUNTER_ID),]
+
+med_rec_adm<-med_rec_adm[order(med_rec_adm$PATIENT_ID,med_rec_adm$ENCOUNTER_ID),]
+
+med_rec_dc<-med_rec_dc[order(med_rec_dc$PATIENT_ID,med_rec_dc$ENCOUNTER_ID),]
+
+meds_inpt<-meds_inpt[order(meds_inpt$PATIENT_ID,meds_inpt$ENCOUNTER_ID),]
+
+meds_outpt<-meds_outpt[order(meds_outpt$PATIENT_ID,meds_outpt$ENCOUNTER_ID),]
+
+procedure_icd<-procedure_icd[order(procedure_icd$PATIENT_ID,procedure_icd$ENCOUNTER_ID),]
+
+social_hx <- social_hx[order(social_hx$PATIENT_ID, social_hx$ENCOUNTER_ID ),]
+
+education<-education[order(education$PATIENT_ID),]
+
+labs<-labs[order(labs$PATIENT_ID,labs$ENCOUNTER_ID),]
+
+demo <- demo[order(demo$PATIENT_ID),]
+
+```
+
