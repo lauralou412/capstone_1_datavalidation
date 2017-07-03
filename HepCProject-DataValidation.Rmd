@@ -50,6 +50,10 @@ demo<-read_delim("Z:/RAW NEW 3.28.2017/DEMO_no_ED_20170329.txt", "|", escape_dou
 
 cpt_ucpg<-read_delim("Z:/RAW NEW 3.28.2017/UCPG_CPT_20170329.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
+ACS<-read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/ACS 2014 Data_Coded_7.2.17.csv", ",", escape_double = FALSE, trim_ws = TRUE)
+
+
+
 ```
 
 #Reduce full datatset to 1% sample size
@@ -471,6 +475,9 @@ demo$Marital_Status<-as.factor(demo$Marital_Status)
 demo$DOD_DS<-as.Date.POSIXct(demo$DOD_DS)
 
 
+names(ACS)[1]<-paste("Zip_Code_DID")
+ACS$Zip_Code_DID<-as.character(ACS$Zip_Code_DID)
+ACS$Zip_Code_DID<-str_pad(ACS$Zip_Code_DID, 5, pad = "0")
 
 ```
 
