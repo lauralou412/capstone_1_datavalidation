@@ -171,13 +171,17 @@ diagnosis_icd$encounter_id<-as.character(diagnosis_icd$encounter_id)
 names(diagnosis_icd)[2]<-paste("ENCOUNTER_ID")
 diagnosis_icd$ENCOUNTER_ID<-str_pad(diagnosis_icd$ENCOUNTER_ID, 10, pad = "0")
 diagnosis_icd$enc_dt_ds<-as.Date.POSIXct(diagnosis_icd$enc_dt_ds)
-diagnosis_icd$icd_dx <- gsub("\\..*", "", diagnosis_icd$icd_dx)
-diagnosis_icd$icd_dx <- str_pad(diagnosis_icd$icd_dx, 4, pad = "0")
 diagnosis_icd$icd_dx<-as.factor(diagnosis_icd$icd_dx)
 diagnosis_icd$icd_diagnosis<-as.factor(diagnosis_icd$icd_diagnosis)
 diagnosis_icd$dx_rank<-as.factor(diagnosis_icd$dx_rank)
 diagnosis_icd$ICD_TYPE<-as.factor(diagnosis_icd$ICD_TYPE)
 
+
+modified_diagnosis_icd <- diagnosis_icd
+str(modified_diagnosis_icd )
+modified_diagnosis_icd$icd_dx <- gsub("\\..*", "", modified_diagnosis_icd$icd_dx)
+modified_diagnosis_icd$icd_dx <- str_pad(modified_diagnosis_icd$icd_dx, 4, pad = "0")
+modified_diagnosis_icd$icd_dx<-as.factor(modified_diagnosis_icd$icd_dx)
 
 
 cpt$patient_id<-as.character(cpt$patient_id) 
