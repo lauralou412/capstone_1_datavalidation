@@ -3,6 +3,11 @@ title: "ProjectDataReview"
 output: html_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
 ## R Markdown
 
 ```{r}
@@ -29,11 +34,9 @@ med_rec_adm<-read_delim("Z:/RawData/TextFormat/Med_Rec_Adm.txt", "|", escape_dou
 
 med_rec_dc<-read_delim("Z:/RawData/TextFormat/Med_Rec_Dc.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
-#HH - we are not using this data at this point, not importing
-#meds_inpt<- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Meds_Inpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+meds_inpt<- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Meds_Inpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
-#HH - we are not using this data at this point, not importing
-#meds_outpt<- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Meds_Outpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)
+meds_outpt<- read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/Meds_Outpt.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
 procedure_icd<-read_delim("Z:/RawData/TextFormat/Procedure_ICD.txt", "|", escape_double = FALSE, trim_ws = TRUE)
 
@@ -50,6 +53,40 @@ cpt_ucpg<-read_delim("Z:/RAW NEW 3.28.2017/UCPG_CPT_20170329.txt", "|", escape_d
 ACS<-read_delim("Z:/RAW NEW 3.10.2017/2017 03 10/ACS 2014 Data_Coded_7.2.17.csv", ",", escape_double = FALSE, trim_ws = TRUE)
 
 
+
+```
+
+#Reduce full datatset to 1% sample size
+```{r}
+
+set.seed(1)
+
+encounters <- encounters[sample(nrow(encounters), .1 * nrow(encounters)),]
+dim(education)
+
+diagnosis_icd <- diagnosis_icd[sample(nrow(diagnosis_icd), .1 * nrow(diagnosis_icd)),]
+
+cpt <- cpt[sample(nrow(cpt), .1 * nrow(cpt)),]
+
+med_rec_adm <- med_rec_adm[sample(nrow(med_rec_adm), .1 * nrow(med_rec_adm)),]
+
+med_rec_dc <- med_rec_dc[sample(nrow(med_rec_dc), .1 * nrow(med_rec_dc)),]
+
+meds_inpt <- meds_inpt[sample(nrow(meds_inpt), .1 * nrow(meds_inpt)),]
+
+meds_outpt <- meds_outpt[sample(nrow(meds_outpt), .1 * nrow(meds_outpt)),]
+
+procedure_icd <- procedure_icd[sample(nrow(procedure_icd), .1 * nrow(procedure_icd)),]
+
+social_hx <- social_hx[sample(nrow(social_hx), .1 * nrow(social_hx)),]
+  
+education <- education[sample(nrow(education), .1 * nrow(education)),]
+
+labs <- labs[sample(nrow(labs), .1 * nrow(labs)),]
+
+demo<-demo[sample(nrow(demo),.1*nrow(demo)),]
+
+cpt_ucpg<-cpt_ucpg[sample(nrow(cpt_ucpg),.1*nrow(cpt_ucpg)),]
 
 ```
 
@@ -250,6 +287,73 @@ med_rec_dc$EVENT_MED_REC_LINE <- as.integer(med_rec_dc$EVENT_MED_REC_LINE)
 med_rec_dc$rownum <- as.integer(med_rec_dc$rownum)
 
 
+meds_inpt$Patient_ID<-as.character(meds_inpt$Patient_ID) 
+names(meds_inpt)[1]<-paste("PATIENT_ID")
+meds_inpt$PATIENT_ID<-str_pad(meds_inpt$PATIENT_ID, 10, pad = "0")
+meds_inpt$Encounter_ID<-as.character(meds_inpt$Encounter_ID)
+names(meds_inpt)[2]<-paste("ENCOUNTER_ID")
+meds_inpt$ENCOUNTER_ID<-str_pad(meds_inpt$ENCOUNTER_ID, 10, pad = "0")
+meds_inpt$Pat_Enc_Csn_ID_DID<-as.character(meds_inpt$Pat_Enc_Csn_ID_DID)
+names(meds_inpt)[3]<-paste("PAT_ENC_CSN_ID_DID")
+meds_inpt$PAT_ENC_CSN_ID_DID<-str_pad(meds_inpt$PAT_ENC_CSN_ID_DID, 10, pad = "0")
+meds_inpt$HSP_ADM_DTTM_DS <- as.Date.POSIXct(meds_inpt$HSP_ADM_DTTM_DS, format="%Y%m%d %H%M%S")
+meds_inpt$HSP_Disch_DTTM_DS <- as.Date.POSIXct(meds_inpt$HSP_Disch_DTTM_DS, format="%Y%m%d %H%M%S")
+meds_inpt$Med_Dept <- as.factor(meds_inpt$Med_Dept)
+meds_inpt$Order_DT_DS <- as.Date.POSIXct(meds_inpt$Order_DT_DS, format="%Y%m%d %H%M%S")
+meds_inpt$Thera_class_c <- as.factor(meds_inpt$Thera_class_c)
+meds_inpt$Thera_class <- as.factor(meds_inpt$Thera_class)
+meds_inpt$Pharm_class_c <- as.factor(meds_inpt$Pharm_class_c)
+meds_inpt$Pharm_class <- as.factor(meds_inpt$Pharm_class)
+meds_inpt$Pharm_subclass_c <- as.factor(meds_inpt$Pharm_subclass_c)
+meds_inpt$Pharm_subclass <- as.factor(meds_inpt$Pharm_subclass)
+meds_inpt$Medication_id <- as.factor(meds_inpt$Medication_id)
+meds_inpt$Medication <- as.factor(meds_inpt$Medication)
+meds_inpt$GPI <- as.factor(meds_inpt$GPI)
+meds_inpt$Generic_name <- as.factor(meds_inpt$Generic_name)
+meds_inpt$Order_Med_Dose <- as.factor(meds_inpt$Order_Med_Dose)
+meds_inpt$Med_Route <- as.factor(meds_inpt$Med_Route)
+meds_inpt$Order_Med_Freq <- as.factor(meds_inpt$Order_Med_Freq)
+meds_inpt$Order_Start_DTTM_DS <- as.Date.POSIXct(meds_inpt$Order_Start_DTTM_DS, format="%Y%m%d %H%M%S")
+meds_inpt$Order_End_DTTM_DS <- as.Date.POSIXct(meds_inpt$Order_End_DTTM_DS, format="%Y%m%d %H%M%S")
+meds_inpt$MAR_Dose <- as.factor(meds_inpt$MAR_Dose)
+meds_inpt$MED_Gave_DTTM_DS <- as.Date.POSIXct(meds_inpt$MED_Gave_DTTM_DS, format="%Y%m%d %H%M%S")
+meds_inpt$Order_End_DTTM_DS <- as.Date.POSIXct(meds_inpt$Order_End_DTTM_DS, format="%Y%m%d %H%M%S")
+meds_inpt$MAR_Action <- as.factor(meds_inpt$MAR_Action)
+meds_inpt$Ordering_Mode <- as.factor(meds_inpt$Ordering_Mode)
+
+
+meds_outpt$Patient_ID<-as.character(meds_outpt$Patient_ID) 
+names(meds_outpt)[1]<-paste("PATIENT_ID")
+meds_outpt$PATIENT_ID<-str_pad(meds_outpt$PATIENT_ID, 10, pad = "0")
+meds_outpt$Encounter_ID<-as.character(meds_outpt$Encounter_ID)
+names(meds_outpt)[2]<-paste("ENCOUNTER_ID")
+meds_outpt$ENCOUNTER_ID<-str_pad(meds_outpt$ENCOUNTER_ID, 10, pad = "0")
+meds_outpt$Pat_Enc_Csn_ID_DID<-as.character(meds_outpt$Pat_Enc_Csn_ID_DID)
+names(meds_outpt)[3]<-paste("PAT_ENC_CSN_ID_DID")
+meds_outpt$PAT_ENC_CSN_ID_DID<-str_pad(meds_outpt$PAT_ENC_CSN_ID_DID, 10, pad = "0")
+meds_outpt$Enc_DT_DS <- as.Date.POSIXct(meds_outpt$Enc_DT_DS, format="%Y%m%d %H%M%S")
+meds_outpt$Med_Dept <- as.factor(meds_outpt$Med_Dept)
+meds_outpt$Order_DT_DS <- as.Date.POSIXct(meds_outpt$Order_DT_DS, format="%Y%m%d %H%M%S")
+meds_outpt$Thera_class_c <- as.factor(meds_outpt$Thera_class_c)
+meds_outpt$Thera_class <- as.factor(meds_outpt$Thera_class)
+meds_outpt$Pharm_class_c <- as.factor(meds_outpt$Pharm_class_c)
+meds_outpt$Pharm_class <- as.factor(meds_outpt$Pharm_class)
+meds_outpt$Pharm_subclass_c <- as.factor(meds_outpt$Pharm_subclass_c)
+meds_outpt$Pharm_subclass <- as.factor(meds_outpt$Pharm_subclass)
+meds_outpt$Medication_id <- as.factor(meds_outpt$Medication_id)
+meds_outpt$Medication <- as.factor(meds_outpt$Medication)
+meds_outpt$GPI <- as.factor(meds_outpt$GPI)
+meds_outpt$Generic_name <- as.factor(meds_outpt$Generic_name)
+meds_outpt$SIG <- as.factor(meds_outpt$SIG)
+meds_outpt$QUANTITY <- as.factor(meds_outpt$QUANTITY)
+meds_outpt$REFILLS <- as.integer(meds_outpt$REFILLS)
+meds_outpt$Order_Med_Dose <- as.factor(meds_outpt$Order_Med_Dose)
+meds_outpt$Med_Route <- as.factor(meds_outpt$Med_Route)
+meds_outpt$Order_Med_Freq <- as.factor(meds_outpt$Order_Med_Freq)
+meds_outpt$Order_Start_DTTM_DS <- as.Date.POSIXct(meds_outpt$Order_Start_DTTM_DS, format="%Y%m%d %H%M%S")
+meds_outpt$Order_End_DTTM_DS <- as.Date.POSIXct(meds_outpt$Order_End_DTTM_DS, format="%Y%m%d %H%M%S")
+meds_outpt$Ordering_Mode <- as.factor(meds_outpt$Ordering_Mode)
+
 
 
 procedure_icd$patient_id<-as.character(procedure_icd$patient_id) 
@@ -376,6 +480,8 @@ demo$Marital_Status_Code<-as.factor(demo$Marital_Status_Code)
 demo$Marital_Status<-as.factor(demo$Marital_Status)
 demo$DOD_DS<-as.Date.POSIXct(demo$DOD_DS)
 
+cpt_ucpg$PATIENT_ID <-as.character(cpt_ucpg$Patient_Id)
+cpt_ucpg$PATIENT_ID<-str_pad(cpt_ucpg$PATIENT_ID, 10, pad = "0")
 
 names(ACS)[1]<-paste("Zip_Code_DID")
 ACS$Zip_Code_DID<-as.character(ACS$Zip_Code_DID)
@@ -396,11 +502,9 @@ med_rec_adm<-med_rec_adm[order(med_rec_adm$PATIENT_ID,med_rec_adm$ENCOUNTER_ID),
 
 med_rec_dc<-med_rec_dc[order(med_rec_dc$PATIENT_ID,med_rec_dc$ENCOUNTER_ID),]
 
-#HH - we are not using this data at this point, not importing
-#meds_inpt<-meds_inpt[order(meds_inpt$PATIENT_ID,meds_inpt$ENCOUNTER_ID),]
+meds_inpt<-meds_inpt[order(meds_inpt$PATIENT_ID,meds_inpt$ENCOUNTER_ID),]
 
-#HH - we are not using this data at this point, not importing
-#meds_outpt<-meds_outpt[order(meds_outpt$PATIENT_ID,meds_outpt$ENCOUNTER_ID),]
+meds_outpt<-meds_outpt[order(meds_outpt$PATIENT_ID,meds_outpt$ENCOUNTER_ID),]
 
 procedure_icd<-procedure_icd[order(procedure_icd$PATIENT_ID,procedure_icd$ENCOUNTER_ID),]
 
@@ -413,114 +517,4 @@ labs<-labs[order(labs$PATIENT_ID,labs$ENCOUNTER_ID),]
 demo <- demo[order(demo$PATIENT_ID),]
 
 ```
-
-```{r}
-
-meds_inpt$Patient_ID<-as.character(meds_inpt$Patient_ID) 
-names(meds_inpt)[1]<-paste("PATIENT_ID")
-meds_inpt$PATIENT_ID<-str_pad(meds_inpt$PATIENT_ID, 10, pad = "0")
-meds_inpt$Encounter_ID<-as.character(meds_inpt$Encounter_ID)
-names(meds_inpt)[2]<-paste("ENCOUNTER_ID")
-meds_inpt$ENCOUNTER_ID<-str_pad(meds_inpt$ENCOUNTER_ID, 10, pad = "0")
-meds_inpt$Pat_Enc_Csn_ID_DID<-as.character(meds_inpt$Pat_Enc_Csn_ID_DID)
-names(meds_inpt)[3]<-paste("PAT_ENC_CSN_ID_DID")
-meds_inpt$PAT_ENC_CSN_ID_DID<-str_pad(meds_inpt$PAT_ENC_CSN_ID_DID, 10, pad = "0")
-meds_inpt$HSP_ADM_DTTM_DS <- as.Date.POSIXct(meds_inpt$HSP_ADM_DTTM_DS, format="%Y%m%d %H%M%S")
-meds_inpt$HSP_Disch_DTTM_DS <- as.Date.POSIXct(meds_inpt$HSP_Disch_DTTM_DS, format="%Y%m%d %H%M%S")
-meds_inpt$Med_Dept <- as.factor(meds_inpt$Med_Dept)
-meds_inpt$Order_DT_DS <- as.Date.POSIXct(meds_inpt$Order_DT_DS, format="%Y%m%d %H%M%S")
-meds_inpt$Thera_class_c <- as.factor(meds_inpt$Thera_class_c)
-meds_inpt$Thera_class <- as.factor(meds_inpt$Thera_class)
-meds_inpt$Pharm_class_c <- as.factor(meds_inpt$Pharm_class_c)
-meds_inpt$Pharm_class <- as.factor(meds_inpt$Pharm_class)
-meds_inpt$Pharm_subclass_c <- as.factor(meds_inpt$Pharm_subclass_c)
-meds_inpt$Pharm_subclass <- as.factor(meds_inpt$Pharm_subclass)
-meds_inpt$Medication_id <- as.factor(meds_inpt$Medication_id)
-meds_inpt$Medication <- as.factor(meds_inpt$Medication)
-meds_inpt$GPI <- as.factor(meds_inpt$GPI)
-meds_inpt$Generic_name <- as.factor(meds_inpt$Generic_name)
-meds_inpt$Order_Med_Dose <- as.factor(meds_inpt$Order_Med_Dose)
-meds_inpt$Med_Route <- as.factor(meds_inpt$Med_Route)
-meds_inpt$Order_Med_Freq <- as.factor(meds_inpt$Order_Med_Freq)
-meds_inpt$Order_Start_DTTM_DS <- as.Date.POSIXct(meds_inpt$Order_Start_DTTM_DS, format="%Y%m%d %H%M%S")
-meds_inpt$Order_End_DTTM_DS <- as.Date.POSIXct(meds_inpt$Order_End_DTTM_DS, format="%Y%m%d %H%M%S")
-meds_inpt$MAR_Dose <- as.factor(meds_inpt$MAR_Dose)
-meds_inpt$MED_Gave_DTTM_DS <- as.Date.POSIXct(meds_inpt$MED_Gave_DTTM_DS, format="%Y%m%d %H%M%S")
-meds_inpt$Order_End_DTTM_DS <- as.Date.POSIXct(meds_inpt$Order_End_DTTM_DS, format="%Y%m%d %H%M%S")
-meds_inpt$MAR_Action <- as.factor(meds_inpt$MAR_Action)
-meds_inpt$Ordering_Mode <- as.factor(meds_inpt$Ordering_Mode)
-
-
-meds_outpt$Patient_ID<-as.character(meds_outpt$Patient_ID) 
-names(meds_outpt)[1]<-paste("PATIENT_ID")
-meds_outpt$PATIENT_ID<-str_pad(meds_outpt$PATIENT_ID, 10, pad = "0")
-meds_outpt$Encounter_ID<-as.character(meds_outpt$Encounter_ID)
-names(meds_outpt)[2]<-paste("ENCOUNTER_ID")
-meds_outpt$ENCOUNTER_ID<-str_pad(meds_outpt$ENCOUNTER_ID, 10, pad = "0")
-meds_outpt$Pat_Enc_Csn_ID_DID<-as.character(meds_outpt$Pat_Enc_Csn_ID_DID)
-names(meds_outpt)[3]<-paste("PAT_ENC_CSN_ID_DID")
-meds_outpt$PAT_ENC_CSN_ID_DID<-str_pad(meds_outpt$PAT_ENC_CSN_ID_DID, 10, pad = "0")
-meds_outpt$Enc_DT_DS <- as.Date.POSIXct(meds_outpt$Enc_DT_DS, format="%Y%m%d %H%M%S")
-meds_outpt$Med_Dept <- as.factor(meds_outpt$Med_Dept)
-meds_outpt$Order_DT_DS <- as.Date.POSIXct(meds_outpt$Order_DT_DS, format="%Y%m%d %H%M%S")
-meds_outpt$Thera_class_c <- as.factor(meds_outpt$Thera_class_c)
-meds_outpt$Thera_class <- as.factor(meds_outpt$Thera_class)
-meds_outpt$Pharm_class_c <- as.factor(meds_outpt$Pharm_class_c)
-meds_outpt$Pharm_class <- as.factor(meds_outpt$Pharm_class)
-meds_outpt$Pharm_subclass_c <- as.factor(meds_outpt$Pharm_subclass_c)
-meds_outpt$Pharm_subclass <- as.factor(meds_outpt$Pharm_subclass)
-meds_outpt$Medication_id <- as.factor(meds_outpt$Medication_id)
-meds_outpt$Medication <- as.factor(meds_outpt$Medication)
-meds_outpt$GPI <- as.factor(meds_outpt$GPI)
-meds_outpt$Generic_name <- as.factor(meds_outpt$Generic_name)
-meds_outpt$SIG <- as.factor(meds_outpt$SIG)
-meds_outpt$QUANTITY <- as.factor(meds_outpt$QUANTITY)
-meds_outpt$REFILLS <- as.integer(meds_outpt$REFILLS)
-meds_outpt$Order_Med_Dose <- as.factor(meds_outpt$Order_Med_Dose)
-meds_outpt$Med_Route <- as.factor(meds_outpt$Med_Route)
-meds_outpt$Order_Med_Freq <- as.factor(meds_outpt$Order_Med_Freq)
-meds_outpt$Order_Start_DTTM_DS <- as.Date.POSIXct(meds_outpt$Order_Start_DTTM_DS, format="%Y%m%d %H%M%S")
-meds_outpt$Order_End_DTTM_DS <- as.Date.POSIXct(meds_outpt$Order_End_DTTM_DS, format="%Y%m%d %H%M%S")
-meds_outpt$Ordering_Mode <- as.factor(meds_outpt$Ordering_Mode)
-
-```
-
-
-
-#Reduce full datatset to 1% sample size
-```{r}
-
-set.seed(1)
-
-encounters <- encounters[sample(nrow(encounters), .1 * nrow(encounters)),]
-dim(education)
-
-diagnosis_icd <- diagnosis_icd[sample(nrow(diagnosis_icd), .1 * nrow(diagnosis_icd)),]
-
-cpt <- cpt[sample(nrow(cpt), .1 * nrow(cpt)),]
-
-med_rec_adm <- med_rec_adm[sample(nrow(med_rec_adm), .1 * nrow(med_rec_adm)),]
-
-med_rec_dc <- med_rec_dc[sample(nrow(med_rec_dc), .1 * nrow(med_rec_dc)),]
-
-#HH - we are not using this data at this point, not importing
-#meds_inpt <- meds_inpt[sample(nrow(meds_inpt), .1 * nrow(meds_inpt)),]
-
-#HH - we are not using this data at this point, not importing
-#meds_outpt <- meds_outpt[sample(nrow(meds_outpt), .1 * nrow(meds_outpt)),]
-
-procedure_icd <- procedure_icd[sample(nrow(procedure_icd), .1 * nrow(procedure_icd)),]
-
-social_hx <- social_hx[sample(nrow(social_hx), .1 * nrow(social_hx)),]
-  
-education <- education[sample(nrow(education), .1 * nrow(education)),]
-
-labs <- labs[sample(nrow(labs), .1 * nrow(labs)),]
-
-demo<-demo[sample(nrow(demo),.1*nrow(demo)),]
-
-cpt_ucpg<-cpt_ucpg[sample(nrow(cpt_ucpg),.1*nrow(cpt_ucpg)),]
-
-```
-
 
