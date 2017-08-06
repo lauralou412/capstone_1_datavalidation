@@ -358,7 +358,13 @@ demo$DOD_DS<-as.Date.POSIXct(demo$DOD_DS)
 names(ACS)[1]<-paste("Zip_Code_DID")
 ACS$Zip_Code_DID<-as.character(ACS$Zip_Code_DID)
 ACS$Zip_Code_DID<-str_pad(ACS$Zip_Code_DID, 5, pad = "0")
-
+ACS$Total_Pop <- as.numeric(ACS$Total_Pop)
+ACS$Pct_Dropped_Out <- as.numeric(ACS$Pct_Dropped_Out)
+ACS$Median_HHI <- as.numeric(ACS$Median_HHI)
+ACS$Median_House_Value <- as.numeric(ACS$Median_House_Value)
+ACS$Median_Gross_Rent <- as.numeric(ACS$Median_Gross_Rent)
+ACS$Pct_Under_18_Poverty <- as.numeric(ACS$Pct_Under_18_Poverty)
+ACS$Pct_65_Plus_Poverty  <- as.numeric(ACS$Pct_65_Plus_Poverty)
 ```
 
 
